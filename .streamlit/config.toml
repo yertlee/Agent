@@ -1,0 +1,3 @@
+# 关闭文件监听，减少 torch.classes 等兼容性噪音
+[server]
+fileWatcherType = "none"

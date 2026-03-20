@@ -1,0 +1,15 @@
+langgraph
+langchain-core
+langchain-openai
+langsmith
+pydantic
+streamlit
+numpy
+faiss-cpu
+sentence-transformers
+typing-extensions
+
+# 说明：
+# - 本仓库不包含 sqlite 数据库与 seed，仅保留 Agent 运行/评测骨架。
+# - 业务数据提供方可替换为真实 ORDER/LOGISTICS API（见 .env.example）。
+
