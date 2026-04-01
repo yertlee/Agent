@@ -33,9 +33,17 @@ def _check_case(case: Dict[str, Any], out: Dict[str, Any]) -> List[str]:
     if exp.get("expect_policy_hits") and float(out.get("rag_hits", 0) or 0) <= 0:
         fails.append("policy_hit_expected but rag_hits==0")
 
-    allow_handoff = bool(exp.get("allow_handoff", False))
-    if (not allow_handoff) and bool(out.get("handoff")):
-        fails.append("handoff unexpected")
+    expected_handoff = exp.get("expected_handoff")
+    if expected_handoff is None and ("allow_handoff" in exp):
+        expected_handoff = bool(exp.get("allow_handoff"))
+    if expected_handoff is not None and bool(out.get("handoff")) != bool(expected_handoff):
+        fails.append(f"handoff {out.get('handoff')} != {expected_handoff}")
+
+    if exp.get("expected_last_business_code") and out.get("last_business_code") != exp.get("expected_last_business_code"):
+        fails.append(f"last_business_code {out.get('last_business_code')} != {exp.get('expected_last_business_code')}")
+
+    if exp.get("expected_eligibility") and out.get("eligibility") != exp.get("expected_eligibility"):
+        fails.append(f"eligibility {out.get('eligibility')} != {exp.get('expected_eligibility')}")
 
     if out.get("unsupported_answer"):
         fails.append("unsupported_answer")
@@ -58,6 +66,12 @@ def main() -> None:
         "slot_clarification_accuracy",
         "response_mode_accuracy",
         "policy_hit_expected_rate",
+        "case_pass_rate",
+        "business_code_match_rate",
+        "tool_path_match_rate",
+        "logistics_required_accuracy",
+        "logistics_tool_expected_rate",
+        "eligibility_accuracy",
         "unsupported_answer_rate",
         "safe_termination_rate",
     ]

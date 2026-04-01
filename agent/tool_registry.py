@@ -10,6 +10,7 @@ from .agent_tools import (
     get_order_info_tool,
     handoff_to_human_tool,
     query_aftersales_tool,
+    query_logistics_snapshot_tool,
 )
 from .rag_retriever import build_citation_text, retrieve_policy_evidence
 
@@ -53,16 +54,16 @@ def policy_rag_search_tool(query: str, top_k: int = 3) -> Dict[str, Any]:
         return {
             "success": False,
             "code": "NO_HITS",
-            "message": "未检索到高质量规则证据。",
+            "message": "No high-quality policy evidence found.",
             "data": {"hit_count": 0, "sources": [], "hits": []},
-            "user_hint": "当前没有检索到足够相关的规则内容，请换一种更具体的问法。",
+            "user_hint": "Try a more specific policy question.",
         }
 
     citation_text = build_citation_text(hits)
     return {
         "success": True,
         "code": "OK",
-        "message": "规则检索成功",
+        "message": "Policy evidence ready.",
         "data": {
             "hit_count": len(hits),
             "sources": sorted({hit.source for hit in hits}),
@@ -77,11 +78,11 @@ def build_tool_registry() -> Dict[str, ToolSpec]:
     tools = [
         ToolSpec(
             name="get_order_info_tool",
-            description="查询订单信息，包括订单状态、支付状态、商品名称和是否支持售后。",
+            description="Query order profile facts, including status, product, amount, carrier code and tracking number.",
             args_schema=_schema_object(
                 {
-                    "order_id": {"type": "string", "description": "订单号"},
-                    "phone_last4": {"type": "string", "description": "手机号后四位"},
+                    "order_id": {"type": "string", "description": "Order ID"},
+                    "phone_last4": {"type": "string", "description": "Last four digits of the receiver phone"},
                 },
                 required=["order_id", "phone_last4"],
             ),
@@ -95,11 +96,11 @@ def build_tool_registry() -> Dict[str, ToolSpec]:
         ),
         ToolSpec(
             name="query_aftersales_tool",
-            description="查询售后进度，用于退款/退货/换货申请后的进展查询。",
+            description="Query the latest aftersales progress for an order.",
             args_schema=_schema_object(
                 {
-                    "order_id": {"type": "string", "description": "订单号"},
-                    "phone_last4": {"type": "string", "description": "手机号后四位"},
+                    "order_id": {"type": "string", "description": "Order ID"},
+                    "phone_last4": {"type": "string", "description": "Last four digits of the receiver phone"},
                 },
                 required=["order_id", "phone_last4"],
             ),
@@ -113,13 +114,13 @@ def build_tool_registry() -> Dict[str, ToolSpec]:
         ),
         ToolSpec(
             name="create_aftersales_tool",
-            description="创建售后申请，用于退款、退货、换货。",
+            description="Create an aftersales request for refund, return, or exchange.",
             args_schema=_schema_object(
                 {
-                    "order_id": {"type": "string", "description": "订单号"},
-                    "phone_last4": {"type": "string", "description": "手机号后四位"},
-                    "service_type": {"type": "string", "description": "售后类型：退款/退货/换货"},
-                    "reason": {"type": "string", "description": "售后原因"},
+                    "order_id": {"type": "string", "description": "Order ID"},
+                    "phone_last4": {"type": "string", "description": "Last four digits of the receiver phone"},
+                    "service_type": {"type": "string", "description": "Service type"},
+                    "reason": {"type": "string", "description": "Reason for aftersales"},
                 },
                 required=["order_id", "phone_last4", "service_type", "reason"],
             ),
@@ -137,12 +138,31 @@ def build_tool_registry() -> Dict[str, ToolSpec]:
             ],
         ),
         ToolSpec(
-            name="handoff_to_human_tool",
-            description="创建转人工请求，用于系统无法继续自动处理、用户要求人工或需要高风险兜底时。",
+            name="query_logistics_snapshot_tool",
+            description="Query a unified logistics snapshot with cache-first fallback to mock or kuaidi100 providers.",
             args_schema=_schema_object(
                 {
-                    "summary": {"type": "string", "description": "当前对话摘要"},
-                    "reason": {"type": "string", "description": "转人工原因"},
+                    "carrier_code": {"type": "string", "description": "Carrier code"},
+                    "tracking_no": {"type": "string", "description": "Tracking number"},
+                    "phone_last4": {"type": "string", "description": "Optional phone tail"},
+                },
+                required=["carrier_code", "tracking_no"],
+            ),
+            callable=query_logistics_snapshot_tool,
+            tool_kind="business",
+            required_slots=["carrier_code", "tracking_no"],
+            retryable=False,
+            max_retries=1,
+            failure_policy="explain_limit",
+            business_acceptable_failure_codes=[],
+        ),
+        ToolSpec(
+            name="handoff_to_human_tool",
+            description="Create a human handoff request for cases that should not stay automated.",
+            args_schema=_schema_object(
+                {
+                    "summary": {"type": "string", "description": "Conversation summary"},
+                    "reason": {"type": "string", "description": "Why handoff is needed"},
                 },
                 required=["summary", "reason"],
             ),
@@ -156,11 +176,11 @@ def build_tool_registry() -> Dict[str, ToolSpec]:
         ),
         ToolSpec(
             name="policy_rag_search_tool",
-            description="在本地规则知识库中检索相关证据，返回结构化片段与引用摘要。",
+            description="Retrieve policy evidence from the local policy knowledge base.",
             args_schema=_schema_object(
                 {
-                    "query": {"type": "string", "description": "规则检索 query"},
-                    "top_k": {"type": "integer", "description": "返回条数"},
+                    "query": {"type": "string", "description": "Retrieval query"},
+                    "top_k": {"type": "integer", "description": "How many chunks to return"},
                 },
                 required=["query"],
             ),
@@ -190,4 +210,3 @@ def describe_registry(registry: Optional[Dict[str, ToolSpec]] = None) -> str:
             f"failure_policy={tool.failure_policy}"
         )
     return "\n".join(lines)
-

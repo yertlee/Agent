@@ -1,12 +1,4 @@
-# Agent Eval 业务数据设计（V2）
-
-本设计文档对应 `seed_agent_eval_v2.sql`（公开仓库不包含该 seed/数据库文件）。
-
-目标是在**不修改 Agent 主流程**、**不扩充 RAG** 的前提下，通过增量插入 `ecommerce.db` 的两张业务表来提升 Agent V3 的本地评测覆盖面：
-
-- `orders`
-- `aftersales_tickets`
-
+# Agent Eval 业务数据设计
 ## 1. 数据分组
 
 `orders` 分为 A~F 组，分别覆盖：

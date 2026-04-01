@@ -60,6 +60,11 @@ def _render_messages(state: dict) -> None:
     st.markdown("### Chat")
     messages = state.get("messages") or []
     interrupt_payload = get_interrupt_payload(st.session_state.current_session_id)
+    last_ai_text = ""
+    for msg in reversed(messages):
+        if isinstance(msg, AIMessage):
+            last_ai_text = str(msg.content or "")
+            break
     if not messages:
         st.info("输入订单、售后、规则或闲聊问题，我会通过 LangGraph runtime 进行处理。")
     else:
@@ -73,7 +78,7 @@ def _render_messages(state: dict) -> None:
 
     if interrupt_payload:
         pending_question = interrupt_payload.get("pending_question") or state.get("pending_question")
-        if pending_question:
+        if pending_question and pending_question != last_ai_text:
             with st.chat_message("assistant"):
                 st.markdown(pending_question)
 

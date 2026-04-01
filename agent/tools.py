@@ -1,5 +1,4 @@
 import os
-import re
 import sqlite3
 import uuid
 from datetime import datetime
@@ -7,11 +6,13 @@ from typing import Any, Dict, Optional
 
 from pydantic import ValidationError
 
+from .logistics_provider import query_logistics_snapshot_with_fallback
 from .schemas import (
     ToolResponse,
     OrderQueryInput,
     AfterSalesCreateInput,
     AfterSalesQueryInput,
+    LogisticsQueryInput,
     HandoffInput,
 )
 
@@ -99,11 +100,39 @@ def _generate_handoff_id() -> str:
     return f"HF{date_part}{rand_part}"
 
 
+def _table_columns(conn: sqlite3.Connection, table_name: str) -> set[str]:
+    cur = conn.cursor()
+    cur.execute(f"PRAGMA table_info({table_name})")
+    return {str(row[1]) for row in cur.fetchall()}
+
+
+def _row_get(row: sqlite3.Row, key: str, default: Any = None) -> Any:
+    try:
+        return row[key]
+    except Exception:
+        return default
+
+
 def _fetch_order(conn: sqlite3.Connection, order_id: str) -> Optional[sqlite3.Row]:
+    columns = _table_columns(conn, "orders")
+    select_fields = [
+        "order_id",
+        "phone_last4",
+        "product_name",
+        "amount",
+        "order_status",
+        "pay_status",
+        "created_at",
+        "can_apply_aftersales",
+    ]
+    for optional_field in ("carrier_code", "tracking_no"):
+        if optional_field in columns:
+            select_fields.append(optional_field)
+
     cur = conn.cursor()
     cur.execute(
-        """
-        SELECT order_id, phone_last4, product_name, amount, order_status, pay_status, created_at, can_apply_aftersales
+        f"""
+        SELECT {", ".join(select_fields)}
         FROM orders
         WHERE order_id = ?
         """,
@@ -199,6 +228,10 @@ def get_order_info(order_id: str, phone_last4: str) -> Dict[str, Any]:
         "pay_status": order["pay_status"],
         "created_at": order["created_at"],
         "can_apply_aftersales": int(order["can_apply_aftersales"]),
+        "carrier_code": str(_row_get(order, "carrier_code", "") or ""),
+        "tracking_no": str(_row_get(order, "tracking_no", "") or ""),
+        "phone_last4": order["phone_last4"],
+        "source": "sql",
     }
 
     return _response(
@@ -377,6 +410,23 @@ def aftersales_service(
             None,
             "系统繁忙，请稍后重试。",
         )
+
+
+def query_logistics_snapshot(carrier_code: str, tracking_no: str, phone_last4: Optional[str] = None) -> Dict[str, Any]:
+    try:
+        payload = LogisticsQueryInput(
+            carrier_code=carrier_code,
+            tracking_no=tracking_no,
+            phone_last4=phone_last4,
+        )
+    except ValidationError as e:
+        return _validation_error_response(e)
+
+    return query_logistics_snapshot_with_fallback(
+        carrier_code=payload.carrier_code,
+        tracking_no=payload.tracking_no,
+        phone_last4=payload.phone_last4,
+    )
 
 
 def handoff_to_human(summary: str, reason: str) -> Dict[str, Any]:

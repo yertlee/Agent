@@ -72,6 +72,34 @@ class AfterSalesQueryInput(BaseModel):
         return v
 
 
+class LogisticsQueryInput(BaseModel):
+    carrier_code: str = Field(..., description="快递公司编码")
+    tracking_no: str = Field(..., description="快递单号")
+    phone_last4: Optional[str] = Field(default=None, description="手机号后四位，可选")
+
+    @field_validator("carrier_code")
+    def validate_carrier_code(cls, v: str) -> str:
+        value = (v or "").strip().lower()
+        if not value:
+            raise ValueError("carrier_code 不能为空")
+        return value
+
+    @field_validator("tracking_no")
+    def validate_tracking_no(cls, v: str) -> str:
+        value = (v or "").strip()
+        if len(value) < 6 or len(value) > 32:
+            raise ValueError("tracking_no 长度必须在 6 到 32 之间")
+        return value
+
+    @field_validator("phone_last4")
+    def validate_phone_last4_optional(cls, v: Optional[str]) -> Optional[str]:
+        if v in (None, ""):
+            return None
+        if not isinstance(v, str) or not v.isdigit() or len(v) != 4:
+            raise ValueError("phone_last4 必须是 4 位数字字符串")
+        return v
+
+
 class HandoffInput(BaseModel):
     summary: str = Field(..., description="当前对话摘要")
     reason: str = Field(..., description="转人工原因")

@@ -14,6 +14,10 @@ env/
 .env
 
 reports/
+runtime/logistics_cache/
+runtime/
+dist/
+*.zip
 *.db
 *.sqlite3
 
@@ -21,4 +25,3 @@ reports/
 .mypy_cache/
 
 .streamlit/secrets.toml
-
