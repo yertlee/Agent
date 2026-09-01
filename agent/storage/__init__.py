@@ -10,3 +10,6 @@
 """
 
 __all__: list = []
+from .repositories import M1Repository
+
+__all__ = ["M1Repository"]

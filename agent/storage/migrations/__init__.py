@@ -10,3 +10,6 @@ module-guide-06 §6 / runbook §4.3 任务 3。M0 只交付：
 """
 
 __all__: list = []
+from .m1 import M1_SCHEMA_VERSION, apply_m1_schema, schema_tables
+
+__all__ = ["M1_SCHEMA_VERSION", "apply_m1_schema", "schema_tables"]

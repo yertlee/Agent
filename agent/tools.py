@@ -8,6 +8,7 @@ from pydantic import ValidationError
 
 from .logistics_runtime import query_logistics_snapshot_simulated
 from .storage.repository import SQLiteOrderRepository
+from .legacy_adapter import LegacyOrderAdapter
 from .schemas import (
     ToolResponse,
     OrderQueryInput,
@@ -179,6 +180,19 @@ def get_order_info(order_id: str, phone_last4: str) -> Dict[str, Any]:
         payload = OrderQueryInput(order_id=order_id, phone_last4=phone_last4)
     except ValidationError as e:
         return _validation_error_response(e)
+
+    # Feature-flag seam: default remains the legacy M0 repository path.  When
+    # explicitly enabled, the actual tool call runs through the durable M1
+    # object chain and is projected back to the legacy ToolResponse shape.
+    if os.getenv("M1_ORDER_SLICE_ENABLED", "0").strip().lower() in {"1", "true", "yes", "on"}:
+        try:
+            outcome = LegacyOrderAdapter(source_db=DB_PATH or "", enabled=True).query(payload.order_id, payload.phone_last4)
+            result = outcome["result"]
+            if result.status.value == "SUCCEEDED":
+                return _response(True, "OK", "订单查询成功", dict(result.payload or {}), "已查询到订单信息。")
+            return _response(False, "ORDER_NOT_FOUND", "未找到对应订单", None, "未查询到该订单，请确认订单号是否正确。")
+        except (FileNotFoundError, sqlite3.Error):
+            return _response(False, "DB_NOT_FOUND", "系统暂时无法访问订单数据", None, "系统暂时无法访问订单数据，请稍后再试。")
 
     try:
         # M0 read slice: repository applies ownership in SQL.  The unfiltered
