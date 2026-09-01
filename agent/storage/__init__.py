@@ -11,5 +11,6 @@
 
 __all__: list = []
 from .repositories import M1Repository
+from .m2 import M2Repository
 
-__all__ = ["M1Repository"]
+__all__ = ["M1Repository", "M2Repository"]

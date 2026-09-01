@@ -9,6 +9,7 @@ from pydantic import ValidationError
 from .logistics_runtime import query_logistics_snapshot_simulated
 from .storage.repository import SQLiteOrderRepository
 from .legacy_adapter import LegacyOrderAdapter
+from .m2_legacy_adapter import M2OrderAdapter
 from .schemas import (
     ToolResponse,
     OrderQueryInput,
@@ -181,7 +182,16 @@ def get_order_info(order_id: str, phone_last4: str) -> Dict[str, Any]:
     except ValidationError as e:
         return _validation_error_response(e)
 
-    # Feature-flag seam: default remains the legacy M0 repository path.  When
+    # M2 feature-flag seam: default remains legacy; enabled calls traverse the
+    # canonical Registry, trusted context and Executor and project back.
+    if os.getenv("M2_EXECUTION_ENABLED", "0").strip().lower() in {"1", "true", "yes", "on"}:
+        try:
+            outcome = M2OrderAdapter(source_db=DB_PATH or "").query(payload.order_id, payload.phone_last4)
+            return _response(bool(outcome.get("success")), "OK" if outcome.get("success") else str(outcome.get("code") or "TOOL_EXECUTION_FAILED"), str(outcome.get("message") or ""), outcome.get("data"), str(outcome.get("user_hint") or ""))
+        except (FileNotFoundError, sqlite3.Error):
+            return _response(False, "CONFIG_MISSING", "系统暂时无法访问订单数据", None, "系统暂时无法访问订单数据，请稍后再试。")
+
+    # M1 feature-flag seam: default remains the legacy M0 repository path.  When
     # explicitly enabled, the actual tool call runs through the durable M1
     # object chain and is projected back to the legacy ToolResponse shape.
     if os.getenv("M1_ORDER_SLICE_ENABLED", "0").strip().lower() in {"1", "true", "yes", "on"}:
