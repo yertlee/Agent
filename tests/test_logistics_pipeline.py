@@ -1,16 +1,13 @@
-import hashlib
-import json
 import os
 import tempfile
 import unittest
-import urllib.parse
 from typing import Dict
 from unittest.mock import patch
 
 os.environ["LANGSMITH_TRACING"] = "false"
 
-from agent.kuaidi100_provider import Kuaidi100Provider
-from agent.logistics_provider import query_logistics_snapshot_with_fallback
+from agent.logistics_simulator import LogisticsSimulator
+from agent.logistics_runtime import query_logistics_snapshot_simulated
 from agent.logistics_types import LogisticsRequest, error_result, now_timestamp, success_result
 from agent.specialists import _tool_observation, eligibility_check_node
 from agent.state import (
@@ -57,14 +54,14 @@ def _snapshot(delivery_state: str, *, delivery_state_name: str, delivery_status_
         "is_signed": is_signed,
         "is_returning": is_returning,
         "is_abnormal": is_abnormal,
-        "source": "kuaidi100_api",
+        "source": "logistics_simulator",
         "fetched_at": now_timestamp(),
         "raw_payload_ref": "",
     }
 
 
-class StaticProvider:
-    provider_name = "kuaidi100"
+class StaticSimulator:
+    source_name = "logistics_simulator"
 
     def __init__(self, result):
         self._result = result
@@ -73,25 +70,11 @@ class StaticProvider:
         return self._result
 
 
-class ExplodingProvider:
-    provider_name = "kuaidi100"
+class ExplodingSimulator:
+    source_name = "logistics_simulator"
 
     def query(self, request):
-        raise AssertionError("provider should not be called on cache hit")
-
-
-class FakeResponse:
-    def __init__(self, payload: Dict[str, object]) -> None:
-        self._payload = payload
-
-    def read(self) -> bytes:
-        return json.dumps(self._payload, ensure_ascii=False).encode("utf-8")
-
-    def __enter__(self):
-        return self
-
-    def __exit__(self, exc_type, exc, tb) -> None:
-        return None
+        raise AssertionError("simulator should not be called on cache hit")
 
 
 class LogisticsPipelineTests(unittest.TestCase):
@@ -145,99 +128,45 @@ class LogisticsPipelineTests(unittest.TestCase):
         self.assertEqual(slots.get("order_id"), "20260320007")
         self.assertEqual(slots.get("phone_last4"), "9156")
 
-    def test_cache_hit_skips_provider_after_first_lookup(self) -> None:
+    def test_cache_hit_skips_simulator_after_first_lookup(self) -> None:
         with tempfile.TemporaryDirectory() as cache_dir, self._set_cache_env(cache_dir):
             first_result = success_result(
-                provider="kuaidi100",
+                source="logistics_simulator",
                 message="snapshot ready",
                 snapshot=_snapshot("signed", delivery_state_name="signed", delivery_status_code="3"),
             )
-            with patch("agent.logistics_provider._select_provider", return_value=StaticProvider(first_result)):
+            with patch("agent.logistics_runtime._select_simulator", return_value=StaticSimulator(first_result)):
                 first = query_logistics_snapshot("yuantong", "YT25569986666541", "1234")
 
             self.assertTrue(first["success"])
             self.assertFalse(first["data"]["_cache_meta"]["cache_hit"])
 
-            with patch("agent.logistics_provider._select_provider", return_value=ExplodingProvider()):
+            with patch("agent.logistics_runtime._select_simulator", return_value=ExplodingSimulator()):
                 second = query_logistics_snapshot("yuantong", "YT25569986666541", "1234")
 
             self.assertTrue(second["success"])
             self.assertEqual(second["data"]["source"], "cache")
             self.assertTrue(second["data"]["_cache_meta"]["cache_hit"])
 
-    def test_kuaidi100_provider_builds_signed_form_request_and_maps_response(self) -> None:
-        captured = {}
-        payload = {
-            "message": "ok",
-            "nu": "YT25569986666541",
-            "ischeck": "0",
-            "com": "yuantong",
-            "status": "200",
-            "data": [
-                {
-                    "time": "2025-06-13 15:56:19",
-                    "context": "package in transit",
-                    "ftime": "2025-06-13 15:56:19",
-                    "status": "in transit",
-                    "location": "Lu'an",
-                    "statusCode": "0",
-                }
-            ],
-            "state": "0",
-            "routeInfo": {
-                "from": {"number": "CN430112000000", "name": "Changsha"},
-                "cur": {"number": "CN341522000000", "name": "Lu'an"},
-                "to": {"number": "CN320583104000", "name": "Kunshan"},
-            },
-            "arrivalTime": "2025-06-14 13",
-            "predictedRoute": [
-                {
-                    "arriveTime": "2025-06-13 19:05:19",
-                    "leaveTime": "2025-06-13 19:59:19",
-                    "province": "Anhui",
-                    "city": "Lu'an",
-                    "district": "Jin'an",
-                    "name": "Lu'an node",
-                    "state": "predicted",
-                    "type": "site",
-                }
-            ],
-        }
-
-        def fake_urlopen(request, timeout=0):
-            captured["request"] = request
-            captured["timeout"] = timeout
-            return FakeResponse(payload)
-
-        provider = Kuaidi100Provider(customer="customer-demo", key="key-demo", resultv2="4")
-        with patch("urllib.request.urlopen", side_effect=fake_urlopen):
-            result = provider.query(LogisticsRequest(carrier_code="yuantong", tracking_no="YT25569986666541", phone_last4="1234"))
-
+    def test_simulator_supports_versioned_injected_faults(self) -> None:
+        simulator = LogisticsSimulator(scene_clock="2026-01-01T00:00:00Z", failure_script={"fault-case": {"code": "SIMULATOR_FAULT", "action": "wait_human"}})
+        fault = simulator.query(LogisticsRequest(carrier_code="carrier", tracking_no="fault-case"))
+        self.assertFalse(fault.success)
+        self.assertEqual(fault.code, "SIMULATOR_FAULT")
+        result = simulator.query(LogisticsRequest(carrier_code="carrier", tracking_no="route-5"))
         self.assertTrue(result.success)
-        self.assertEqual(captured["request"].get_method(), "POST")
-        self.assertEqual(captured["request"].get_header("Content-type"), "application/x-www-form-urlencoded")
-        body = urllib.parse.parse_qs(captured["request"].data.decode("utf-8"))
-        param_str = body["param"][0]
-        self.assertEqual(body["customer"][0], "customer-demo")
-        self.assertEqual(
-            body["sign"][0],
-            hashlib.md5(f"{param_str}key-democustomer-demo".encode("utf-8")).hexdigest().upper(),
-        )
-        self.assertIn('"resultv2":"4"', param_str)
-        self.assertEqual(result.snapshot["delivery_state"], "in_transit")
-        self.assertEqual(result.snapshot["current_location"], "Lu'an")
-        self.assertEqual(result.snapshot["route_to"], "Kunshan")
-        self.assertEqual(result.snapshot["arrival_time"], "2025-06-14 13")
+        self.assertEqual(result.snapshot["simulator_version"], "logistics-simulator-v1")
+        self.assertEqual(result.snapshot["scene_clock"], "2026-01-01T00:00:00Z")
 
-    def test_cache_miss_api_success_returns_standardized_snapshot(self) -> None:
+    def test_cache_miss_simulator_success_returns_standardized_snapshot(self) -> None:
         with tempfile.TemporaryDirectory() as cache_dir, self._set_cache_env(cache_dir):
-            provider_result = success_result(
-                provider="kuaidi100",
+            execution_result = success_result(
+                source="logistics_simulator",
                 message="snapshot ready",
                 snapshot=_snapshot("in_transit", delivery_state_name="in_transit", delivery_status_code="0"),
             )
-            with patch("agent.logistics_provider._select_provider", return_value=StaticProvider(provider_result)):
-                result = query_logistics_snapshot_with_fallback(
+            with patch("agent.logistics_runtime._select_simulator", return_value=StaticSimulator(execution_result)):
+                result = query_logistics_snapshot_simulated(
                     carrier_code="yuantong",
                     tracking_no="YT25569986666541",
                     phone_last4="1234",
@@ -265,20 +194,20 @@ class LogisticsPipelineTests(unittest.TestCase):
 
     def test_logistics_error_is_structured(self) -> None:
         with tempfile.TemporaryDirectory() as cache_dir, self._set_cache_env(cache_dir):
-            provider_result = error_result(
-                provider="kuaidi100",
+            execution_result = error_result(
+                source="logistics_simulator",
                 error_code="408",
                 error_message="phone tail mismatch",
                 retryable=False,
                 suggested_action="ask_user",
                 missing_slots=["phone_last4"],
             )
-            with patch("agent.logistics_provider._select_provider", return_value=StaticProvider(provider_result)):
+            with patch("agent.logistics_runtime._select_simulator", return_value=StaticSimulator(execution_result)):
                 result = query_logistics_snapshot("yuantong", "YT25569986666541")
 
         self.assertFalse(result["success"])
         self.assertEqual(result["code"], "408")
-        self.assertEqual(result["data"]["provider"], "kuaidi100")
+        self.assertEqual(result["data"]["source"], "logistics_simulator")
         self.assertEqual(result["data"]["suggested_action"], "ask_user")
         self.assertEqual(result["missing_slots"], ["phone_last4"])
 
@@ -288,7 +217,7 @@ class LogisticsPipelineTests(unittest.TestCase):
             "code": "QUERY_TOO_FREQUENT",
             "message": "query too frequent",
             "data": {
-                "provider": "cache_guard",
+                "source": "cache_guard",
                 "success": False,
                 "error_code": "QUERY_TOO_FREQUENT",
                 "error_message": "query too frequent",
@@ -331,7 +260,7 @@ class LogisticsPipelineTests(unittest.TestCase):
             "code": "QUERY_TOO_FREQUENT",
             "message": "query too frequent",
             "data": {
-                "provider": "cache_guard",
+                "source": "cache_guard",
                 "success": False,
                 "error_code": "QUERY_TOO_FREQUENT",
                 "error_message": "query too frequent",
@@ -371,8 +300,8 @@ class LogisticsPipelineTests(unittest.TestCase):
         scenarios = [
             ("408", "ask_user", ["phone_last4"], "must_ask_user", ResponseMode.ASK_USER),
             ("400", "ask_user", [], "can_finalize", ResponseMode.EXPLAIN_LIMIT),
-            ("500", "retry_later", [], "retry_same_step", ResponseMode.IDLE),
-            ("503", "handoff", [], "should_escalate", ResponseMode.HANDOFF),
+            ("SIMULATOR_RETRYABLE", "retry_later", [], "retry_same_step", ResponseMode.IDLE),
+            ("SIMULATOR_UNAVAILABLE", "handoff", [], "should_escalate", ResponseMode.HANDOFF),
         ]
 
         for code, action, missing_slots, expected_flag, expected_mode in scenarios:
@@ -382,7 +311,7 @@ class LogisticsPipelineTests(unittest.TestCase):
                     "code": code,
                     "message": f"logistics failed: {code}",
                     "data": {
-                        "provider": "kuaidi100",
+                        "source": "logistics_simulator",
                         "success": False,
                         "error_code": code,
                         "error_message": f"logistics failed: {code}",
@@ -406,7 +335,7 @@ class LogisticsPipelineTests(unittest.TestCase):
                 ]
                 state["current_step_index"] = 0
                 state["last_observation"] = observation
-                if code == "500":
+                if code == "SIMULATOR_RETRYABLE":
                     state["retry_count_by_stage"] = {}
                 else:
                     state["retry_count_by_stage"] = {"step-1:query_logistics_snapshot_tool": 1}

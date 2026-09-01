@@ -35,11 +35,11 @@ class LogisticsRequest:
 
 
 @dataclass
-class LogisticsProviderResult:
+class LogisticsExecutionResult:
     success: bool
     code: str
     message: str
-    provider_name: str
+    source_name: str
     snapshot: Optional[Dict[str, Any]] = None
     raw_payload: Optional[Dict[str, Any]] = None
     error: Optional[Dict[str, Any]] = None
@@ -48,16 +48,16 @@ class LogisticsProviderResult:
     retryable: bool = False
 
 
-class LogisticsProvider(Protocol):
-    provider_name: str
+class LogisticsExecutor(Protocol):
+    source_name: str
 
-    def query(self, request: LogisticsRequest) -> LogisticsProviderResult:
+    def query(self, request: LogisticsRequest) -> LogisticsExecutionResult:
         ...
 
 
-def make_provider_error(
+def make_source_error(
     *,
-    provider: str,
+    source: str,
     error_code: str,
     error_message: str,
     retryable: bool,
@@ -66,7 +66,7 @@ def make_provider_error(
     raw_payload_ref: str = "",
 ) -> Dict[str, Any]:
     return {
-        "provider": provider,
+        "source": source,
         "success": False,
         "error_code": str(error_code),
         "error_message": str(error_message),
@@ -79,7 +79,7 @@ def make_provider_error(
 
 def error_result(
     *,
-    provider: str,
+    source: str,
     error_code: str,
     error_message: str,
     retryable: bool,
@@ -87,15 +87,15 @@ def error_result(
     missing_slots: Optional[List[str]] = None,
     raw_payload: Optional[Dict[str, Any]] = None,
     cache_meta: Optional[Dict[str, Any]] = None,
-) -> LogisticsProviderResult:
-    return LogisticsProviderResult(
+) -> LogisticsExecutionResult:
+    return LogisticsExecutionResult(
         success=False,
         code=str(error_code),
         message=str(error_message),
-        provider_name=provider,
+        source_name=source,
         raw_payload=raw_payload if isinstance(raw_payload, dict) else None,
-        error=make_provider_error(
-            provider=provider,
+        error=make_source_error(
+            source=source,
             error_code=error_code,
             error_message=error_message,
             retryable=retryable,
@@ -110,17 +110,17 @@ def error_result(
 
 def success_result(
     *,
-    provider: str,
+    source: str,
     message: str,
     snapshot: Dict[str, Any],
     raw_payload: Optional[Dict[str, Any]] = None,
     cache_meta: Optional[Dict[str, Any]] = None,
-) -> LogisticsProviderResult:
-    return LogisticsProviderResult(
+) -> LogisticsExecutionResult:
+    return LogisticsExecutionResult(
         success=True,
         code="OK",
         message=message,
-        provider_name=provider,
+        source_name=source,
         snapshot=dict(snapshot or {}),
         raw_payload=raw_payload if isinstance(raw_payload, dict) else None,
         cache_meta=dict(cache_meta or {}),
@@ -128,7 +128,7 @@ def success_result(
     )
 
 
-def provider_result_to_tool_response(result: LogisticsProviderResult) -> Dict[str, Any]:
+def execution_result_to_tool_response(result: LogisticsExecutionResult) -> Dict[str, Any]:
     if result.success:
         data = dict(result.snapshot or {})
         if result.cache_meta:

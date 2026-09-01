@@ -20,11 +20,11 @@ class CacheLookupResult:
     raw_payload_ref: str
     last_query_at: str
     ttl_minutes: int
-    should_block_api: bool
+    should_throttle_query: bool
     file_path: str
 
 
-class FileLogisticsCacheProvider:
+class FileLogisticsCache:
     def __init__(
         self,
         *,
@@ -70,7 +70,7 @@ class FileLogisticsCacheProvider:
                 raw_payload_ref=str(path),
                 last_query_at=last_query_at,
                 ttl_minutes=self.ttl_minutes,
-                should_block_api=False,
+                should_throttle_query=False,
                 file_path=str(path),
             )
 
@@ -81,7 +81,7 @@ class FileLogisticsCacheProvider:
             raw_payload_ref=str(path) if record else "",
             last_query_at=last_query_at,
             ttl_minutes=self.ttl_minutes,
-            should_block_api=self._should_block_api(last_query_at),
+            should_throttle_query=self._should_throttle_query(last_query_at),
             file_path=str(path),
         )
 
@@ -91,7 +91,7 @@ class FileLogisticsCacheProvider:
         cache_key: str,
         snapshot: Dict[str, Any],
         raw_payload: Optional[Dict[str, Any]],
-        provider_name: str,
+        source_name: str,
     ) -> str:
         path = self._path_for(cache_key)
         fetched_at = str(snapshot.get("fetched_at") or now_timestamp())
@@ -99,7 +99,7 @@ class FileLogisticsCacheProvider:
         stored_snapshot["raw_payload_ref"] = str(path)
         record = {
             "cache_key": cache_key,
-            "provider_name": provider_name,
+            "source_name": source_name,
             "last_status": "success",
             "last_query_at": fetched_at,
             "fetched_at": fetched_at,
@@ -115,7 +115,7 @@ class FileLogisticsCacheProvider:
         self,
         *,
         cache_key: str,
-        provider_name: str,
+        source_name: str,
         error: Dict[str, Any],
         raw_payload: Optional[Dict[str, Any]] = None,
     ) -> str:
@@ -123,7 +123,7 @@ class FileLogisticsCacheProvider:
         existing = self._read_record(path) or {}
         record = {
             "cache_key": cache_key,
-            "provider_name": provider_name,
+            "source_name": source_name,
             "last_status": "error",
             "last_query_at": now_timestamp(),
             "fetched_at": str(existing.get("fetched_at") or ""),
@@ -157,7 +157,7 @@ class FileLogisticsCacheProvider:
             return False
         return (timestamp + timedelta(minutes=self.ttl_minutes)) > datetime.now()
 
-    def _should_block_api(self, last_query_at: str) -> bool:
+    def _should_throttle_query(self, last_query_at: str) -> bool:
         timestamp = parse_timestamp(last_query_at)
         if timestamp is None:
             return False

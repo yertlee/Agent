@@ -6,7 +6,8 @@ from typing import Any, Dict, Optional
 
 from pydantic import ValidationError
 
-from .logistics_provider import query_logistics_snapshot_with_fallback
+from .logistics_runtime import query_logistics_snapshot_simulated
+from .storage.repository import SQLiteOrderRepository
 from .schemas import (
     ToolResponse,
     OrderQueryInput,
@@ -18,7 +19,7 @@ from .schemas import (
 
 
 # NOTE: public repo 不包含 sqlite 数据库文件。
-# 运行时请通过环境变量 `ECOMMERCE_DB_PATH` 指向你自己的 ecommerce.db（或在后续替换为真实 API provider）。
+# 运行时请通过环境变量 `ECOMMERCE_DB_PATH` 指向本地 ecommerce.db。
 DB_PATH = os.getenv("ECOMMERCE_DB_PATH")
 
 ALLOWED_SERVICE_TYPES = {"退款", "退货", "换货"}
@@ -180,11 +181,28 @@ def get_order_info(order_id: str, phone_last4: str) -> Dict[str, Any]:
         return _validation_error_response(e)
 
     try:
-        conn = _get_conn()
-        try:
-            order = _fetch_order(conn, payload.order_id)
-        finally:
-            conn.close()
+        # M0 read slice: repository applies ownership in SQL.  The unfiltered
+        # metadata read only distinguishes an unknown order from a wrong
+        # ownership proof so legacy response semantics remain stable.
+        with SQLiteOrderRepository(DB_PATH or "") as repository:
+            order_data = repository.get_order_for_owner(payload.order_id, payload.phone_last4)
+            if order_data is None:
+                exists = repository.get_order_by_id(payload.order_id)
+                if exists is not None:
+                    return _response(
+                        False,
+                        "PHONE_MISMATCH",
+                        "手机号后四位校验失败",
+                        None,
+                        "您提供的手机号后四位与订单信息不一致，请重新确认。",
+                    )
+                return _response(
+                    False,
+                    "ORDER_NOT_FOUND",
+                    "未找到对应订单",
+                    None,
+                    "未查询到该订单，请确认订单号是否正确。",
+                )
     except FileNotFoundError as e:
         return _response(
             False,
@@ -202,35 +220,17 @@ def get_order_info(order_id: str, phone_last4: str) -> Dict[str, Any]:
             "系统繁忙，请稍后重试。",
         )
 
-    if order is None:
-        return _response(
-            False,
-            "ORDER_NOT_FOUND",
-            "未找到对应订单",
-            None,
-            "未查询到该订单，请确认订单号是否正确。",
-        )
-
-    if order["phone_last4"] != payload.phone_last4:
-        return _response(
-            False,
-            "PHONE_MISMATCH",
-            "手机号后四位校验失败",
-            None,
-            "您提供的手机号后四位与订单信息不一致，请重新确认。",
-        )
-
     data = {
-        "order_id": order["order_id"],
-        "product_name": order["product_name"],
-        "amount": float(order["amount"]),
-        "order_status": order["order_status"],
-        "pay_status": order["pay_status"],
-        "created_at": order["created_at"],
-        "can_apply_aftersales": int(order["can_apply_aftersales"]),
-        "carrier_code": str(_row_get(order, "carrier_code", "") or ""),
-        "tracking_no": str(_row_get(order, "tracking_no", "") or ""),
-        "phone_last4": order["phone_last4"],
+        "order_id": order_data["order_id"],
+        "product_name": order_data["product_name"],
+        "amount": float(order_data["amount"]),
+        "order_status": order_data["order_status"],
+        "pay_status": order_data["pay_status"],
+        "created_at": order_data["created_at"],
+        "can_apply_aftersales": int(order_data["can_apply_aftersales"]),
+        "carrier_code": str(order_data.get("carrier_code", "") or ""),
+        "tracking_no": str(order_data.get("tracking_no", "") or ""),
+        "phone_last4": order_data["phone_last4"],
         "source": "sql",
     }
 
@@ -422,7 +422,7 @@ def query_logistics_snapshot(carrier_code: str, tracking_no: str, phone_last4: O
     except ValidationError as e:
         return _validation_error_response(e)
 
-    return query_logistics_snapshot_with_fallback(
+    return query_logistics_snapshot_simulated(
         carrier_code=payload.carrier_code,
         tracking_no=payload.tracking_no,
         phone_last4=payload.phone_last4,

@@ -79,7 +79,7 @@ def build_langchain_tools():
         StructuredTool.from_function(
             func=query_logistics_snapshot_tool,
             name="query_logistics_snapshot_tool",
-            description="Query a unified logistics snapshot with cache-first fallback to mock or kuaidi100 providers.",
+            description="Query a unified logistics snapshot using the local deterministic simulator and cache.",
         ),
         StructuredTool.from_function(
             func=handoff_to_human_tool,

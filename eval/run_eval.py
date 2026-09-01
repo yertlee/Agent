@@ -48,7 +48,7 @@ def isolated_db():
         raise RuntimeError(
             "本仓库不包含 sqlite 数据库文件。\n"
             f"运行 eval 时请设置环境变量 {DB_PATH_ENV} 指向你本地的 ecommerce.db。\n"
-            "TODO: 后续可将 order/aftersales provider 替换为真实 API。"
+            "请先提供本地订单数据库路径后再运行评测。"
         )
 
     temp_dir = tempfile.mkdtemp(prefix="agent_v3_eval_")

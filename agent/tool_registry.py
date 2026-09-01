@@ -139,7 +139,7 @@ def build_tool_registry() -> Dict[str, ToolSpec]:
         ),
         ToolSpec(
             name="query_logistics_snapshot_tool",
-            description="Query a unified logistics snapshot with cache-first fallback to mock or kuaidi100 providers.",
+            description="Query a unified logistics snapshot using the local deterministic simulator and cache.",
             args_schema=_schema_object(
                 {
                     "carrier_code": {"type": "string", "description": "Carrier code"},

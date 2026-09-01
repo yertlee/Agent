@@ -93,7 +93,7 @@ def _logistics_rate_limited_result() -> dict:
         "code": "QUERY_TOO_FREQUENT",
         "message": "query too frequent",
         "data": {
-            "provider": "cache_guard",
+            "source": "cache_guard",
             "success": False,
             "error_code": "QUERY_TOO_FREQUENT",
             "error_message": "query too frequent",
@@ -270,12 +270,12 @@ class EscalationRuntimeTests(unittest.TestCase):
         logistics_failure = {
             "success": False,
             "code": "500",
-            "message": "logistics provider unavailable",
+            "message": "logistics simulator unavailable",
             "data": {
-                "provider": "kuaidi100",
+                "source": "logistics_simulator",
                 "success": False,
                 "error_code": "500",
-                "error_message": "provider unavailable",
+                "error_message": "simulator unavailable",
                 "retryable": True,
                 "suggested_action": "retry_later",
                 "missing_slots": [],
@@ -440,12 +440,12 @@ class EscalationRuntimeTests(unittest.TestCase):
         logistics_failure = {
             "success": False,
             "code": "500",
-            "message": "logistics provider unavailable",
+            "message": "logistics simulator unavailable",
             "data": {
-                "provider": "kuaidi100",
+                "source": "logistics_simulator",
                 "success": False,
                 "error_code": "500",
-                "error_message": "provider unavailable",
+                "error_message": "simulator unavailable",
                 "retryable": True,
                 "suggested_action": "retry_later",
                 "missing_slots": [],
