@@ -1,0 +1,183 @@
+dev44_manifest:
+  manifest_version: m3.dev44.v1
+  dataset_version: m3.dev44.v1
+  registry_version: m3.registry.v1
+  policy_version: m3.policy.v1
+  simulator_version: logistics-simulator.v1
+  world_template_version: world-template.v1
+  seed: 4401
+  mode: simulated
+  rubric:
+    goal_assertions: [intent, plan, business_code, tool_path, terminal, world_fingerprint]
+    world_fingerprint: frozen fixture sha256 canonical hash
+    expected_results: fixture failure_script error_code or OK/NO_OP
+    runtime_failure_policy: FAILED/BLOCKED/CANCELLED are failed applicable runs
+    plan_assertion: activated PlanRevision DAG and canonical capability projection
+    expected_business_codes:
+      default: [OK]
+      policy_evidence_conflict: [NO_OP]
+  gold_plan:
+    m3-legacy-demo-01:
+      - {tool_ref: 'order/get_info@v1', capability_ref: 'order/read@v1', depends_on: []}
+    m3-legacy-demo-02:
+      - {tool_ref: 'order/get_info@v1', capability_ref: 'order/read@v1', depends_on: []}
+    m3-legacy-demo-03:
+      - {tool_ref: 'order/get_info@v1', capability_ref: 'order/read@v1', depends_on: []}
+    m3-legacy-demo-04:
+      - {tool_ref: 'order/get_info@v1', capability_ref: 'order/read@v1', depends_on: []}
+    m3-legacy-demo-05:
+      []
+    m3-legacy-demo-06:
+      []
+    m3-legacy-demo-07:
+      - {tool_ref: 'order/get_info@v1', capability_ref: 'order/read@v1', depends_on: []}
+      - {tool_ref: 'logistics/query@v1', capability_ref: 'logistics/read@v1', depends_on: [0]}
+      - {tool_ref: 'aftersales/create@v1', capability_ref: 'aftersales/write@v1', depends_on: [1]}
+    m3-legacy-demo-08:
+      - {tool_ref: 'order/get_info@v1', capability_ref: 'order/read@v1', depends_on: []}
+      - {tool_ref: 'logistics/query@v1', capability_ref: 'logistics/read@v1', depends_on: [0]}
+      - {tool_ref: 'aftersales/create@v1', capability_ref: 'aftersales/write@v1', depends_on: [1]}
+    m3-legacy-demo-09:
+      - {tool_ref: 'order/get_info@v1', capability_ref: 'order/read@v1', depends_on: []}
+      - {tool_ref: 'aftersales/query@v1', capability_ref: 'aftersales/read@v1', depends_on: [0]}
+    m3-legacy-demo-10:
+      - {tool_ref: 'order/get_info@v1', capability_ref: 'order/read@v1', depends_on: []}
+    m3-legacy-extended-01:
+      - {tool_ref: 'order/get_info@v1', capability_ref: 'order/read@v1', depends_on: []}
+      - {tool_ref: 'logistics/query@v1', capability_ref: 'logistics/read@v1', depends_on: [0]}
+      - {tool_ref: 'aftersales/create@v1', capability_ref: 'aftersales/write@v1', depends_on: [1]}
+    m3-legacy-extended-02:
+      - {tool_ref: 'order/get_info@v1', capability_ref: 'order/read@v1', depends_on: []}
+      - {tool_ref: 'logistics/query@v1', capability_ref: 'logistics/read@v1', depends_on: [0]}
+      - {tool_ref: 'aftersales/create@v1', capability_ref: 'aftersales/write@v1', depends_on: [1]}
+    m3-legacy-extended-03:
+      - {tool_ref: 'order/get_info@v1', capability_ref: 'order/read@v1', depends_on: []}
+      - {tool_ref: 'logistics/query@v1', capability_ref: 'logistics/read@v1', depends_on: [0]}
+      - {tool_ref: 'aftersales/create@v1', capability_ref: 'aftersales/write@v1', depends_on: [1]}
+    m3-legacy-extended-04:
+      - {tool_ref: 'order/get_info@v1', capability_ref: 'order/read@v1', depends_on: []}
+      - {tool_ref: 'logistics/query@v1', capability_ref: 'logistics/read@v1', depends_on: [0]}
+      - {tool_ref: 'aftersales/create@v1', capability_ref: 'aftersales/write@v1', depends_on: [1]}
+    m3-legacy-extended-05:
+      - {tool_ref: 'order/get_info@v1', capability_ref: 'order/read@v1', depends_on: []}
+      - {tool_ref: 'aftersales/query@v1', capability_ref: 'aftersales/read@v1', depends_on: [0]}
+    m3-legacy-extended-06:
+      - {tool_ref: 'order/get_info@v1', capability_ref: 'order/read@v1', depends_on: []}
+      - {tool_ref: 'aftersales/query@v1', capability_ref: 'aftersales/read@v1', depends_on: [0]}
+    m3-legacy-extended-07:
+      - {tool_ref: 'order/get_info@v1', capability_ref: 'order/read@v1', depends_on: []}
+      - {tool_ref: 'logistics/query@v1', capability_ref: 'logistics/read@v1', depends_on: [0]}
+      - {tool_ref: 'aftersales/create@v1', capability_ref: 'aftersales/write@v1', depends_on: [1]}
+    m3-legacy-extended-08:
+      - {tool_ref: 'order/get_info@v1', capability_ref: 'order/read@v1', depends_on: []}
+      - {tool_ref: 'aftersales/query@v1', capability_ref: 'aftersales/read@v1', depends_on: [0]}
+    m3-legacy-extended-09:
+      - {tool_ref: 'order/get_info@v1', capability_ref: 'order/read@v1', depends_on: []}
+    m3-legacy-extended-10:
+      - {tool_ref: 'order/get_info@v1', capability_ref: 'order/read@v1', depends_on: []}
+      - {tool_ref: 'aftersales/query@v1', capability_ref: 'aftersales/read@v1', depends_on: [0]}
+    m3-legacy-extended-11:
+      []
+    m3-synth-order-01:
+      - {tool_ref: 'order/get_info@v1', capability_ref: 'order/read@v1', depends_on: []}
+    m3-synth-order-02:
+      - {tool_ref: 'order/get_info@v1', capability_ref: 'order/read@v1', depends_on: []}
+    m3-synth-order-03:
+      - {tool_ref: 'order/get_info@v1', capability_ref: 'order/read@v1', depends_on: []}
+    m3-synth-order-04:
+      - {tool_ref: 'order/get_info@v1', capability_ref: 'order/read@v1', depends_on: []}
+    m3-synth-policy-01:
+      - {tool_ref: 'policy/search@v1', capability_ref: 'policy/read@v1', depends_on: []}
+    m3-synth-policy-02:
+      - {tool_ref: 'policy/search@v1', capability_ref: 'policy/read@v1', depends_on: []}
+    m3-synth-policy-03:
+      - {tool_ref: 'policy/search@v1', capability_ref: 'policy/read@v1', depends_on: []}
+    m3-synth-policy-04:
+      - {tool_ref: 'policy/search@v1', capability_ref: 'policy/read@v1', depends_on: []}
+    m3-synth-logistics-01:
+      - {tool_ref: 'logistics/query@v1', capability_ref: 'logistics/read@v1', depends_on: []}
+    m3-synth-logistics-02:
+      - {tool_ref: 'logistics/query@v1', capability_ref: 'logistics/read@v1', depends_on: []}
+    m3-synth-logistics-03:
+      - {tool_ref: 'logistics/query@v1', capability_ref: 'logistics/read@v1', depends_on: []}
+    m3-synth-logistics-04:
+      - {tool_ref: 'logistics/query@v1', capability_ref: 'logistics/read@v1', depends_on: []}
+    m3-synth-logistics-05:
+      - {tool_ref: 'logistics/query@v1', capability_ref: 'logistics/read@v1', depends_on: []}
+    m3-synth-logistics-06:
+      - {tool_ref: 'logistics/query@v1', capability_ref: 'logistics/read@v1', depends_on: []}
+    m3-synth-logistics-07:
+      - {tool_ref: 'logistics/query@v1', capability_ref: 'logistics/read@v1', depends_on: []}
+    m3-synth-logistics-08:
+      - {tool_ref: 'logistics/query@v1', capability_ref: 'logistics/read@v1', depends_on: []}
+    m3-synth-aftersales-01:
+      - {tool_ref: 'order/get_info@v1', capability_ref: 'order/read@v1', depends_on: []}
+      - {tool_ref: 'aftersales/query@v1', capability_ref: 'aftersales/read@v1', depends_on: [0]}
+    m3-synth-aftersales-02:
+      - {tool_ref: 'order/get_info@v1', capability_ref: 'order/read@v1', depends_on: []}
+      - {tool_ref: 'aftersales/create@v1', capability_ref: 'aftersales/write@v1', depends_on: [0]}
+    m3-synth-aftersales-03:
+      - {tool_ref: 'order/get_info@v1', capability_ref: 'order/read@v1', depends_on: []}
+      - {tool_ref: 'aftersales/create@v1', capability_ref: 'aftersales/write@v1', depends_on: [0]}
+    m3-synth-mixed-01:
+      - {tool_ref: 'order/get_info@v1', capability_ref: 'order/read@v1', depends_on: []}
+      - {tool_ref: 'policy/search@v1', capability_ref: 'policy/read@v1', depends_on: []}
+    m3-synth-mixed-02:
+      - {tool_ref: 'order/get_info@v1', capability_ref: 'order/read@v1', depends_on: []}
+      - {tool_ref: 'logistics/query@v1', capability_ref: 'logistics/read@v1', depends_on: []}
+    m3-synth-escalation-01:
+      - {tool_ref: 'human/handoff@v1', capability_ref: 'human/handoff@v1', depends_on: []}
+    m3-synth-escalation-02:
+      - {tool_ref: 'human/handoff@v1', capability_ref: 'human/handoff@v1', depends_on: []}
+  quota:
+    order_read_auth: 8
+    policy_evidence_conflict: 6
+    logistics_snapshot: 8
+    aftersales_query_create: 12
+    mixed_domain: 6
+    escalation_review: 4
+  cases:
+    - {scenario_id: m3-legacy-demo-01, source_case_ref: m3-legacy-demo-01, turns: ["帮我查订单 20260320001，后四位 1234"], category: order_read_auth, expected_intent: order_query, expected_tool_path: [get_order_info_tool], expected_terminal_class: PASS, expected_business_codes: [OK], world_fixture_ref: world-legacy-01, split: dev, synthetic: false}
+    - {scenario_id: m3-legacy-demo-02, source_case_ref: m3-legacy-demo-02, turns: ["帮我查订单 20260320007，后四位 0000"], category: order_read_auth, expected_intent: order_query, expected_tool_path: [get_order_info_tool], expected_terminal_class: PASS, expected_business_codes: [AUTH_IDENTITY_MISMATCH], world_fixture_ref: world-legacy-02, split: dev, synthetic: false}
+    - {scenario_id: m3-legacy-demo-03, source_case_ref: m3-legacy-demo-03, turns: ["我要查订单", "订单号 20260320015", "后四位 8905"], category: order_read_auth, expected_intent: order_query, expected_tool_path: [get_order_info_tool], expected_terminal_class: PASS, expected_business_codes: [OK], world_fixture_ref: world-legacy-03, split: dev, synthetic: false}
+    - {scenario_id: m3-legacy-demo-04, source_case_ref: m3-legacy-demo-04, turns: ["帮我查订单 20991231001，后四位 1234"], category: order_read_auth, expected_intent: order_query, expected_tool_path: [get_order_info_tool], expected_terminal_class: PASS, expected_business_codes: [ORDER_NOT_FOUND], world_fixture_ref: world-legacy-04, split: dev, synthetic: false}
+    - {scenario_id: m3-legacy-demo-05, source_case_ref: m3-legacy-demo-05, turns: ["七天无理由退货运费一般谁承担？"], category: policy_evidence_conflict, expected_intent: policy, expected_tool_path: [], expected_terminal_class: PASS, expected_business_codes: [NO_OP], world_fixture_ref: world-legacy-05, split: dev, synthetic: false}
+    - {scenario_id: m3-legacy-demo-06, source_case_ref: m3-legacy-demo-06, turns: ["你们对火星移民仓保修政策是什么？"], category: policy_evidence_conflict, expected_intent: policy, expected_tool_path: [], expected_terminal_class: PASS, expected_business_codes: [NO_OP], world_fixture_ref: world-legacy-06, split: dev, synthetic: false}
+    - {scenario_id: m3-legacy-demo-07, source_case_ref: m3-legacy-demo-07, turns: ["帮我给订单 20260320001，后四位 1234 申请退款，原因是商品不想要了"], category: aftersales_query_create, expected_intent: aftersales, expected_tool_path: [get_order_info_tool, query_logistics_snapshot_tool, create_aftersales_tool], expected_terminal_class: PASS, expected_business_codes: [OK], world_fixture_ref: world-legacy-07, split: dev, synthetic: false}
+    - {scenario_id: m3-legacy-demo-08, source_case_ref: m3-legacy-demo-08, turns: ["帮我给订单 20260320007，后四位 9156 申请退款，原因是不想要了"], category: aftersales_query_create, expected_intent: aftersales, expected_tool_path: [get_order_info_tool, query_logistics_snapshot_tool], expected_terminal_class: PASS, expected_business_codes: [ELIGIBILITY_DENIED], world_fixture_ref: world-legacy-08, split: dev, synthetic: false}
+    - {scenario_id: m3-legacy-demo-09, source_case_ref: m3-legacy-demo-09, turns: ["帮我查订单 20260320019，后四位 6028 的售后进度"], category: aftersales_query_create, expected_intent: aftersales, expected_tool_path: [get_order_info_tool, query_aftersales_tool], expected_terminal_class: PASS, expected_business_codes: [OK], world_fixture_ref: world-legacy-09, split: dev, synthetic: false}
+    - {scenario_id: m3-legacy-demo-10, source_case_ref: m3-legacy-demo-10, turns: ["帮我查订单 20260320001，后四位 1234，顺便说下七天无理由退货运费谁承担"], category: mixed_domain, expected_intent: order_query, expected_tool_path: [get_order_info_tool], expected_terminal_class: PASS, expected_business_codes: [OK], world_fixture_ref: world-legacy-10, split: dev, synthetic: false}
+    - {scenario_id: m3-legacy-extended-01, source_case_ref: m3-legacy-extended-01, turns: ["订单 20260320009，后四位 6403，帮我申请退货，原因是买错了"], category: aftersales_query_create, expected_intent: aftersales, expected_tool_path: [get_order_info_tool, query_logistics_snapshot_tool], expected_terminal_class: PASS, expected_business_codes: [ELIGIBILITY_DENIED], world_fixture_ref: world-legacy-11, split: dev, synthetic: false}
+    - {scenario_id: m3-legacy-extended-02, source_case_ref: m3-legacy-extended-02, turns: ["订单 20260320011，后四位 6671，快递号 ST20260320011，承运商 shentong，帮我申请退款，原因是买错了"], category: aftersales_query_create, expected_intent: aftersales, expected_tool_path: [get_order_info_tool, query_logistics_snapshot_tool], expected_terminal_class: PASS, expected_business_codes: [ELIGIBILITY_DENIED], world_fixture_ref: world-legacy-12, split: dev, synthetic: false}
+    - {scenario_id: m3-legacy-extended-03, source_case_ref: m3-legacy-extended-03, turns: ["订单 20260320015，后四位 8905，帮我申请退款，原因是不想要了"], category: aftersales_query_create, expected_intent: aftersales, expected_tool_path: [get_order_info_tool], expected_terminal_class: PASS, expected_business_codes: [DATA_MISSING], world_fixture_ref: world-legacy-13, split: dev, synthetic: false}
+    - {scenario_id: m3-legacy-extended-04, source_case_ref: m3-legacy-extended-04, turns: ["订单 20260320018，后四位 4517，帮我申请退款，原因是商品有问题"], category: aftersales_query_create, expected_intent: aftersales, expected_tool_path: [get_order_info_tool, query_logistics_snapshot_tool, create_aftersales_tool], expected_terminal_class: PASS, expected_business_codes: [ACTIVE_CASE_EXISTS], world_fixture_ref: world-legacy-14, split: dev, synthetic: false}
+    - {scenario_id: m3-legacy-extended-05, source_case_ref: m3-legacy-extended-05, turns: ["查询订单 20260320020，后四位 1196 的售后进度"], category: aftersales_query_create, expected_intent: aftersales, expected_tool_path: [get_order_info_tool, query_aftersales_tool], expected_terminal_class: PASS, expected_business_codes: [OK], world_fixture_ref: world-legacy-15, split: dev, synthetic: false}
+    - {scenario_id: m3-legacy-extended-06, source_case_ref: m3-legacy-extended-06, turns: ["帮我查订单 20260320001，后四位 1234 的售后进度"], category: aftersales_query_create, expected_intent: aftersales, expected_tool_path: [get_order_info_tool, query_aftersales_tool], expected_terminal_class: PASS, expected_business_codes: [DATA_MISSING], world_fixture_ref: world-legacy-16, split: dev, synthetic: false}
+    - {scenario_id: m3-legacy-extended-07, source_case_ref: m3-legacy-extended-07, turns: ["先帮我查订单 20260320001，后四位 1234，再帮我申请退款，原因是我不想要了"], category: mixed_domain, expected_intent: aftersales, expected_tool_path: [get_order_info_tool, query_logistics_snapshot_tool, create_aftersales_tool], expected_terminal_class: PASS, expected_business_codes: [OK], world_fixture_ref: world-legacy-17, split: dev, synthetic: false}
+    - {scenario_id: m3-legacy-extended-08, source_case_ref: m3-legacy-extended-08, turns: ["帮我查订单 20260320020，后四位 1196 的售后进度，并告诉我退货运费一般谁承担"], category: mixed_domain, expected_intent: aftersales, expected_tool_path: [get_order_info_tool, query_aftersales_tool], expected_terminal_class: PASS, expected_business_codes: [OK], world_fixture_ref: world-legacy-18, split: dev, synthetic: false}
+    - {scenario_id: m3-legacy-extended-09, source_case_ref: m3-legacy-extended-09, turns: ["查订单 20260320007，后四位 9156，并告诉我七天无理由退货规则"], category: mixed_domain, expected_intent: order_query, expected_tool_path: [get_order_info_tool], expected_terminal_class: PASS, expected_business_codes: [OK], world_fixture_ref: world-legacy-19, split: dev, synthetic: false}
+    - {scenario_id: m3-legacy-extended-10, source_case_ref: m3-legacy-extended-10, turns: ["帮我查订单 20260320019，后四位 6028 的售后进度", "我现在就要人工客服处理"], category: escalation_review, expected_intent: handoff, expected_tool_path: [get_order_info_tool, query_aftersales_tool], expected_terminal_class: PASS, expected_business_codes: [OK], world_fixture_ref: world-legacy-20, split: dev, synthetic: false}
+    - {scenario_id: m3-legacy-extended-11, source_case_ref: m3-legacy-extended-11, turns: ["你别解释了，马上转人工处理"], category: escalation_review, expected_intent: handoff, expected_tool_path: [], expected_terminal_class: PASS, expected_business_codes: [NO_OP], world_fixture_ref: world-legacy-21, split: dev, synthetic: false}
+    - {scenario_id: m3-synth-order-01, category: order_read_auth, turns: ["查询订单 ORD-SYN-01，后四位 1001"], expected_intent: order_query, expected_tool_path: [get_order_info_tool], expected_terminal_class: PASS, expected_business_codes: [OK], world_fixture_ref: world-synth-01, split: dev, synthetic: true}
+    - {scenario_id: m3-synth-order-02, category: order_read_auth, turns: ["查询订单 ORD-SYN-02，后四位 1002"], expected_intent: order_query, expected_tool_path: [get_order_info_tool], expected_terminal_class: PASS, expected_business_codes: [DATA_MISSING], world_fixture_ref: world-synth-02, split: dev, synthetic: true}
+    - {scenario_id: m3-synth-order-03, category: order_read_auth, turns: ["我要查订单"], expected_intent: order_query, expected_tool_path: [get_order_info_tool], expected_terminal_class: PASS, expected_business_codes: [OK], world_fixture_ref: world-synth-03, split: dev, synthetic: true}
+    - {scenario_id: m3-synth-order-04, category: order_read_auth, turns: ["订单 ORD-SYN-04 后四位 1004 身份不匹配"], expected_intent: order_query, expected_tool_path: [get_order_info_tool], expected_terminal_class: PASS, expected_business_codes: [AUTH_IDENTITY_MISMATCH], world_fixture_ref: world-synth-04, split: dev, synthetic: true}
+    - {scenario_id: m3-synth-policy-01, category: policy_evidence_conflict, turns: ["查询退款政策"], expected_intent: policy, expected_tool_path: [policy_rag_search_tool], expected_terminal_class: PASS, expected_business_codes: [OK], world_fixture_ref: world-synth-05, split: dev, synthetic: true}
+    - {scenario_id: m3-synth-policy-02, category: policy_evidence_conflict, turns: ["查询退货运费规则"], expected_intent: policy, expected_tool_path: [policy_rag_search_tool], expected_terminal_class: PASS, expected_business_codes: [OK], world_fixture_ref: world-synth-06, split: dev, synthetic: true}
+    - {scenario_id: m3-synth-policy-03, category: policy_evidence_conflict, turns: ["两条政策互相冲突，请判断"], expected_intent: policy, expected_tool_path: [policy_rag_search_tool], expected_terminal_class: PASS, expected_business_codes: [POLICY_CONFLICT], world_fixture_ref: world-synth-07, split: dev, synthetic: true}
+    - {scenario_id: m3-synth-policy-04, category: policy_evidence_conflict, turns: ["查询过期政策版本"], expected_intent: policy, expected_tool_path: [policy_rag_search_tool], expected_terminal_class: PASS, expected_business_codes: [DATA_MISSING], world_fixture_ref: world-synth-08, split: dev, synthetic: true}
+    - {scenario_id: m3-synth-logistics-01, category: logistics_snapshot, turns: ["查询物流运单 LOG-SYN-01"], expected_intent: logistics, expected_tool_path: [query_logistics_snapshot_tool], expected_terminal_class: PASS, expected_business_codes: [OK], world_fixture_ref: world-synth-09, split: dev, synthetic: true}
+    - {scenario_id: m3-synth-logistics-02, category: logistics_snapshot, turns: ["物流显示延迟，请查询 LOG-SYN-02"], expected_intent: logistics, expected_tool_path: [query_logistics_snapshot_tool], expected_terminal_class: PASS, expected_business_codes: [OK], world_fixture_ref: world-synth-10, split: dev, synthetic: true}
+    - {scenario_id: m3-synth-logistics-03, category: logistics_snapshot, turns: ["运单 LOG-SYN-03 已签收吗"], expected_intent: logistics, expected_tool_path: [query_logistics_snapshot_tool], expected_terminal_class: PASS, expected_business_codes: [OK], world_fixture_ref: world-synth-11, split: dev, synthetic: true}
+    - {scenario_id: m3-synth-logistics-04, category: logistics_snapshot, turns: ["运单 LOG-SYN-04 正在退回"], expected_intent: logistics, expected_tool_path: [query_logistics_snapshot_tool], expected_terminal_class: PASS, expected_business_codes: [OK], world_fixture_ref: world-synth-12, split: dev, synthetic: true}
+    - {scenario_id: m3-synth-logistics-05, category: logistics_snapshot, turns: ["物流异常 LOG-SYN-05"], expected_intent: logistics, expected_tool_path: [query_logistics_snapshot_tool], expected_terminal_class: PASS, expected_business_codes: [DATA_STALE], world_fixture_ref: world-synth-13, split: dev, synthetic: true}
+    - {scenario_id: m3-synth-logistics-06, category: logistics_snapshot, turns: ["物流查询频繁，请稍后重试 LOG-SYN-06"], expected_intent: logistics, expected_tool_path: [query_logistics_snapshot_tool], expected_terminal_class: PASS, expected_business_codes: [DATA_STALE], world_fixture_ref: world-synth-14, split: dev, synthetic: true}
+    - {scenario_id: m3-synth-logistics-07, category: logistics_snapshot, turns: ["模拟物流故障 LOG-SYN-07"], expected_intent: logistics, expected_tool_path: [query_logistics_snapshot_tool], expected_terminal_class: FAILED, expected_business_codes: [INFRA_UNAVAILABLE], world_fixture_ref: world-synth-15, split: dev, synthetic: true}
+    - {scenario_id: m3-synth-logistics-08, category: logistics_snapshot, turns: ["查询物流但缺少运单号"], expected_intent: logistics, expected_tool_path: [query_logistics_snapshot_tool], expected_terminal_class: PASS, expected_business_codes: [DATA_MISSING], world_fixture_ref: world-synth-16, split: dev, synthetic: true}
+    - {scenario_id: m3-synth-aftersales-01, category: aftersales_query_create, turns: ["查询订单 ORD-SYN-17 的售后进度"], expected_intent: aftersales, expected_tool_path: [get_order_info_tool, query_aftersales_tool], expected_terminal_class: PASS, expected_business_codes: [OK], world_fixture_ref: world-synth-17, split: dev, synthetic: true}
+    - {scenario_id: m3-synth-aftersales-02, category: aftersales_query_create, turns: ["申请退款 ORD-SYN-18"], expected_intent: aftersales, expected_tool_path: [get_order_info_tool, create_aftersales_tool], expected_terminal_class: PASS, expected_business_codes: [OK], world_fixture_ref: world-synth-18, split: dev, synthetic: true}
+    - {scenario_id: m3-synth-aftersales-03, category: aftersales_query_create, turns: ["售后需要人工审核 ORD-SYN-19"], expected_intent: aftersales, expected_tool_path: [get_order_info_tool, create_aftersales_tool], expected_terminal_class: PASS, expected_business_codes: [ELIGIBILITY_DENIED], world_fixture_ref: world-synth-19, split: dev, synthetic: true}
+    - {scenario_id: m3-synth-mixed-01, category: mixed_domain, turns: ["查订单 ORD-SYN-20 并查询退货政策"], expected_intent: mixed, expected_tool_path: [get_order_info_tool, policy_rag_search_tool], expected_terminal_class: PASS, expected_business_codes: [OK], world_fixture_ref: world-synth-20, split: dev, synthetic: true}
+    - {scenario_id: m3-synth-mixed-02, category: mixed_domain, turns: ["查订单 ORD-SYN-21 再查物流 LOG-SYN-21"], expected_intent: mixed, expected_tool_path: [get_order_info_tool, query_logistics_snapshot_tool], expected_terminal_class: PASS, expected_business_codes: [OK], world_fixture_ref: world-synth-21, split: dev, synthetic: true}
+    - {scenario_id: m3-synth-escalation-01, category: escalation_review, turns: ["请转人工处理订单争议"], expected_intent: handoff, expected_tool_path: [handoff_to_human_tool], expected_terminal_class: PASS, expected_business_codes: [OK], world_fixture_ref: world-synth-22, split: dev, synthetic: true}
+    - {scenario_id: m3-synth-escalation-02, category: escalation_review, turns: ["高风险售后请求需要审核"], expected_intent: handoff, expected_tool_path: [handoff_to_human_tool], expected_terminal_class: BLOCKED, expected_business_codes: [BLOCKED], world_fixture_ref: world-synth-23, split: dev, synthetic: true}

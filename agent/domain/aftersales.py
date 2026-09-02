@@ -111,24 +111,27 @@ class AfterSalesService:
 
     def decide_review_ticket(self, *, ticket_id: str, actor: str, decision: str, reason: str) -> dict[str, Any]:
         """The only API that closes a HIGH_RISK review and advances its case."""
-        if actor != "reviewer" or decision not in {"APPROVE", "REJECT"}:
+        if actor != "reviewer" or decision not in {"APPROVE", "REJECT", "EXPIRE", "CANCEL"}:
             raise AfterSalesError(ErrorCatalog.envelope("STATE_TRANSITION_REJECTED", details={"actor": actor, "decision": decision}))
         try:
             self.repository.conn.execute("BEGIN IMMEDIATE")
             ticket = self.repository.conn.execute("SELECT ticket_id,run_id,task_id,status FROM review_tickets WHERE ticket_id=?", (ticket_id,)).fetchone()
             if not ticket or ticket[3] != "OPEN":
                 raise AfterSalesError(ErrorCatalog.envelope("CONTRACT_INVALID_STATE", details={"ticket_id": ticket_id}))
-            target = "APPROVED" if decision == "APPROVE" else "REJECTED"
-            self.repository.conn.execute("UPDATE review_tickets SET status=?,decision=?,decision_by=?,decision_at=?,updated_at=? WHERE ticket_id=? AND status='OPEN'", ("APPROVED" if decision == "APPROVE" else "REJECTED", decision, actor, __import__("agent.storage.repositories", fromlist=["_now"])._now(), __import__("agent.storage.repositories", fromlist=["_now"])._now(), ticket_id))
+            target = "APPROVED" if decision == "APPROVE" else ("REJECTED" if decision == "REJECT" else ("EXPIRED" if decision == "EXPIRE" else "CANCELLED"))
+            self.repository.conn.execute("UPDATE review_tickets SET status=?,decision=?,decision_by=?,decision_at=?,updated_at=? WHERE ticket_id=? AND status='OPEN'", (target, decision, actor, __import__("agent.storage.repositories", fromlist=["_now"])._now(), __import__("agent.storage.repositories", fromlist=["_now"])._now(), ticket_id))
             case = self.repository.conn.execute("SELECT case_id,status,state_version,session_id FROM aftersales_cases WHERE task_id=? AND run_id=? AND status='HUMAN_REVIEW' ORDER BY created_at DESC LIMIT 1", (ticket[2], ticket[1])).fetchone()
             if not case:
                 raise AfterSalesError(ErrorCatalog.envelope("CONTRACT_INVALID_STATE", details={"ticket_id": ticket_id}))
             new_version = int(case[2]) + 1
-            self.repository.conn.execute("UPDATE aftersales_cases SET status=?,state_version=?,updated_at=? WHERE case_id=? AND status='HUMAN_REVIEW'", (target, new_version, __import__("agent.storage.repositories", fromlist=["_now"])._now(), case[0]))
-            event = self._event_locked(run_id=ticket[1], session_id=case[3], task_id=ticket[2], event_type="TASK_STATE_CHANGED", payload={"task_id": ticket[2], "actor": actor, "from": "HUMAN_REVIEW", "to": target, "reason": reason, "ticket_id": ticket_id, "state_version": new_version}, parent_event_id=self._last_event(ticket[1]))
-            self.repository.log_audit_locked(run_id=ticket[1], actor=actor, action="REVIEW_DECISION", reason=reason, trace_id=event.trace_id)
+            case_target = "APPROVED" if decision == "APPROVE" else "CANCELLED"
+            snapshot_hash = sha256_json({"case_id": case[0], "from": "HUMAN_REVIEW", "to": case_target, "version": new_version})
+            self.repository.conn.execute("UPDATE aftersales_cases SET status=?,state_version=?,updated_at=? WHERE case_id=? AND status='HUMAN_REVIEW'", (case_target, new_version, __import__("agent.storage.repositories", fromlist=["_now"])._now(), case[0]))
+            event = self._event_locked(run_id=ticket[1], session_id=case[3], task_id=ticket[2], event_type="TASK_STATE_CHANGED", payload={"task_id": ticket[2], "actor": actor, "from": "HUMAN_REVIEW", "to": case_target, "reason": reason, "ticket_id": ticket_id, "state_version": new_version}, parent_event_id=self._last_event(ticket[1]))
+            review_event = self._event_locked(run_id=ticket[1], session_id=case[3], task_id=ticket[2], event_type="REVIEW_EVENT", payload={"action": "REVIEW_DECISION", "decision": decision, "ticket_id": ticket_id, "from": "HUMAN_REVIEW", "to": case_target, "reason": reason, "state_version": new_version, "snapshot_hash": snapshot_hash}, parent_event_id=event.trace_id, actor="reviewer")
+            self.repository.log_audit_locked(run_id=ticket[1], actor=actor, action="REVIEW_DECISION", reason=reason, trace_id=review_event.trace_id)
             self.repository.conn.commit()
-            return {"ticket_id": ticket_id, "case_id": case[0], "status": target, "state_version": new_version}
+            return {"ticket_id": ticket_id, "case_id": case[0], "status": case_target, "ticket_status": target, "state_version": new_version}
         except Exception:
             self.repository.conn.rollback()
             raise
@@ -161,9 +164,9 @@ class AfterSalesService:
         row = self.repository.conn.execute("SELECT event_id FROM trace_outbox WHERE run_id=? ORDER BY seq_no DESC LIMIT 1", (run_id,)).fetchone()
         return str(row[0]) if row else None
 
-    def _event_locked(self, *, run_id: str, session_id: str, event_type: str, payload: dict[str, Any], parent_event_id: Optional[str], plan_revision_id: Optional[str] = None, task_id: Optional[str] = None, attempt_id: Optional[str] = None):
+    def _event_locked(self, *, run_id: str, session_id: str, event_type: str, payload: dict[str, Any], parent_event_id: Optional[str], plan_revision_id: Optional[str] = None, task_id: Optional[str] = None, attempt_id: Optional[str] = None, actor: str = "runtime"):
         row = self.repository.conn.execute("SELECT next_seq_no FROM runs WHERE run_id=?", (run_id,)).fetchone()
-        event = build_event(run_id=run_id, session_id=session_id, event_type=event_type, seq_no=int(row[0]), plan_revision_id=plan_revision_id, task_id=task_id, attempt_id=attempt_id, parent_event_id=parent_event_id, payload=payload)
+        event = build_event(run_id=run_id, session_id=session_id, event_type=event_type, seq_no=int(row[0]), plan_revision_id=plan_revision_id, task_id=task_id, attempt_id=attempt_id, parent_event_id=parent_event_id, payload=payload, actor=actor)
         self.repository._append_m2_event_locked(event)
         return event
 

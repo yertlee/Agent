@@ -1,0 +1,94 @@
+world_fixtures:
+  template_version: world-template.v1
+  clock_origin: 2026-01-01T00:00:00Z
+  fingerprint_algorithm: sha256_canonical_fixture_v1
+  gold_fingerprints:
+    world-legacy-01: f010ab393aa39c39d40bd1278bb041a67080907dd44158355e4f79916128c1c1
+    world-legacy-02: 919659d905ed8e317b9c0b2fa4c6ff35452cf2b77e7c1bf8071d14e1aa970f5a
+    world-legacy-03: 9342ea98a54e73b22f5f40198681a02a4ec9b761ef497ca7f6c729f4d0e6c141
+    world-legacy-04: 76ddaf0ff40d4ef114de5117d03ffda44751d6e205e6956fb71c8e1dae5e4d8f
+    world-legacy-05: adcc93516beac39618945e84e5273438e6b79125eeab647fd691704e2640b3a3
+    world-legacy-06: 70f7b5a4ea68746de53993a88f256d86ca7769c5f1fea7dca21505c3a9b93747
+    world-legacy-07: 78be4e48f2aeafce582e777acf3a7b4ff655ec471f423a700eaf4803a8ede351
+    world-legacy-08: 969e70a9c4b1c2a49fe0c945784df8470503c2b239e599643f6b9a5af0f36da4
+    world-legacy-09: 2f65946eb9a81c02dbb4743968e50f55bb69eaaf2b410def1a0cca78658331a4
+    world-legacy-10: ddc8dc883659632bcf0809b0f4fca9791af303419bf02ed32b13cde2b88dbba4
+    world-legacy-11: f7609816c1f6f0e19d35d6b2bb803be56cfb34e8e23fbd6d49a787341482d55e
+    world-legacy-12: 454cea68bd8cd82a68963f777728178d14ef012c61b33b0c8974b517c8772b69
+    world-legacy-13: 7ef50a8518b5cf769d437a8ef52151fcacbcfe23c6f8abb20de2589a6fcc8ecc
+    world-legacy-14: c9acefe3a179ca8e837e5f1f4570c5b8616bc07783ee55ec912e91ffe9827d6f
+    world-legacy-15: 058054172350395fbb9ce50e7286311a12d48303140583cc144767f0f8e8bc6f
+    world-legacy-16: 3caf5e9ea8a1695f25b1ecd3c5ee69ffc28d6262b23d4c3d627bb1c654f3dfb8
+    world-legacy-17: 629cc374da34623f5b28f0d917f6c7362cbc64b899b20e3e07e3b0322db41ede
+    world-legacy-18: d9fd38510ae972de346eca8f22abf0e75a0c7d4552b53b580e9bdf14376f7cdc
+    world-legacy-19: 3138e8376dc5f45b5aee05465baf9f8ac8d4fbe8bc2c697dde85a9edfd89a347
+    world-legacy-20: fe6eb27296e723c696cff9e1a07c6d59b1b4f113bb1d96df5b0a7c944cb30ff4
+    world-legacy-21: b0fd53a31a97db25e84424c64c6899312c84f5c1f9c096a2509dcb9edcf2a363
+    world-synth-01: ad2ab7ace0ef0d9d4b93b21ba94c6baaa9ca4b79928278a0be8960e31e3a6134
+    world-synth-02: b9fdd18cc0f7b9b657b62cf2adf9af6c0b5bdafbb1f72bcaefb339ad2f994a01
+    world-synth-03: fd62f949923f58b92cf920172b83a0225fd66203f4f1a48b644011b0ddf4400b
+    world-synth-04: e3b7f5ffdb596720b287d266130f2b562e15f75578ab50ee18eb6f139384848f
+    world-synth-05: fee8caff52403af3427397c38c4a48e88734021bdcdb6e44b4c67cb4412c6c00
+    world-synth-06: e7d6e6c1863f46fa217ca2dc09ca3b2cbc0cf9e74a2e4fa12d94601d9954e6ba
+    world-synth-07: 653a3d6631b04855d2cf595ded35d46d753def9ad9911e2b3d17586a1292c613
+    world-synth-08: 21457ddf3882fe5328789205b30da6c36c0bc75f8de5da1ca7c480778b65bbec
+    world-synth-09: 9e8432d17d4703d3182128e08cc8c4723538dd6b2f83f0acb08b7d9fe34170a2
+    world-synth-10: 8d6a91af8172e17943a6a30f74d348fb9c460dd419404caf65cd4b61955dd00d
+    world-synth-11: 3bfd71a84d72305db1ab8fa26449f85f89689fc5f04ef7190e76d5cffc854c85
+    world-synth-12: 4a7cbcf3b0176d0073610946929838bfdda453b02302b94c3f9099eb206d8fcd
+    world-synth-13: 5d3c52109464ab6ffeca91f1576a1e828132f9f425c4509f920c625c214b542e
+    world-synth-14: 1cce1b26127be291c281cd1cc2042511ecb2ca6262231ca613136d73145a44f3
+    world-synth-15: eab87f457795fcf1aa5ab5de7e3de53ea7d47116e2ee7140b7a11550400b58f8
+    world-synth-16: d68096e662911c307e9b45c7e839f805c21f46faa9b710f0da1c443e8cee81d6
+    world-synth-17: 916c2f05ba0c3ba98213a72e31e285657103a56d9aff046adec0990376bf9d80
+    world-synth-18: 2b5b213b74697e4ea103fc7c35e3138732c7bb339a25c0b6fb6474f3e9b415a4
+    world-synth-19: a0f76dcd1704ca4724a982c867170ac92ec4679c55d9a625379c62e462fce08e
+    world-synth-20: 97f51bcbf8f9a9b9d455988e5e2d8bf9d414cc6bac01f774a093af43444d4f95
+    world-synth-21: cd91bf8ec8df1cadbab20449ed7e4ffd6f640bd09815fd4499727ff0cb615bb6
+    world-synth-22: 267238b39fe781191a07f31c08219a130e6eab3236934d67866bc0c6ce8eca0a
+    world-synth-23: 03c4925cf18310e5ea55ff068cf2aa6ed269b91d48a22a7a92b2617545a5ece5
+  fixtures:
+    - {world_fixture_ref: world-legacy-01, seed: 4401, entities: []}
+    - {world_fixture_ref: world-legacy-02, seed: 4402, entities: [], failure_script: {version: fault.v1, action: RETURN_ERROR, target_tool: order/get_info@v1, error_code: AUTH_IDENTITY_MISMATCH}}
+    - {world_fixture_ref: world-legacy-03, seed: 4403, entities: []}
+    - {world_fixture_ref: world-legacy-04, seed: 4404, entities: [], failure_script: {version: fault.v1, action: RETURN_ERROR, target_tool: order/get_info@v1, error_code: ORDER_NOT_FOUND}}
+    - {world_fixture_ref: world-legacy-05, seed: 4405, entities: []}
+    - {world_fixture_ref: world-legacy-06, seed: 4406, entities: []}
+    - {world_fixture_ref: world-legacy-07, seed: 4407, entities: []}
+    - {world_fixture_ref: world-legacy-08, seed: 4408, entities: [], failure_script: {version: fault.v1, action: RETURN_ERROR, target_tool: logistics/query@v1, error_code: ELIGIBILITY_DENIED}}
+    - {world_fixture_ref: world-legacy-09, seed: 4409, entities: []}
+    - {world_fixture_ref: world-legacy-10, seed: 4410, entities: []}
+    - {world_fixture_ref: world-legacy-11, seed: 4411, entities: [], failure_script: {version: fault.v1, action: RETURN_ERROR, target_tool: logistics/query@v1, error_code: ELIGIBILITY_DENIED}}
+    - {world_fixture_ref: world-legacy-12, seed: 4412, entities: [], failure_script: {version: fault.v1, action: RETURN_ERROR, target_tool: logistics/query@v1, error_code: ELIGIBILITY_DENIED}}
+    - {world_fixture_ref: world-legacy-13, seed: 4413, entities: [], failure_script: {version: fault.v1, action: RETURN_ERROR, target_tool: order/get_info@v1, error_code: DATA_MISSING}}
+    - {world_fixture_ref: world-legacy-14, seed: 4414, entities: [], failure_script: {version: fault.v1, action: RETURN_ERROR, target_tool: aftersales/create@v1, error_code: ACTIVE_CASE_EXISTS}}
+    - {world_fixture_ref: world-legacy-15, seed: 4415, entities: []}
+    - {world_fixture_ref: world-legacy-16, seed: 4416, entities: [], failure_script: {version: fault.v1, action: RETURN_ERROR, target_tool: aftersales/query@v1, error_code: DATA_MISSING}}
+    - {world_fixture_ref: world-legacy-17, seed: 4417, entities: []}
+    - {world_fixture_ref: world-legacy-18, seed: 4418, entities: []}
+    - {world_fixture_ref: world-legacy-19, seed: 4419, entities: []}
+    - {world_fixture_ref: world-legacy-20, seed: 4420, entities: []}
+    - {world_fixture_ref: world-legacy-21, seed: 4421, entities: []}
+    - {world_fixture_ref: world-synth-01, seed: 4422, entities: []}
+    - {world_fixture_ref: world-synth-02, seed: 4423, entities: [], failure_script: {version: fault.v1, action: RETURN_ERROR, target_tool: order/get_info@v1, error_code: DATA_MISSING}}
+    - {world_fixture_ref: world-synth-03, seed: 4424, entities: []}
+    - {world_fixture_ref: world-synth-04, seed: 4425, entities: [], failure_script: {version: fault.v1, action: RETURN_ERROR, target_tool: order/get_info@v1, error_code: AUTH_IDENTITY_MISMATCH}}
+    - {world_fixture_ref: world-synth-05, seed: 4426, entities: []}
+    - {world_fixture_ref: world-synth-06, seed: 4427, entities: []}
+    - {world_fixture_ref: world-synth-07, seed: 4428, entities: [], failure_script: {version: fault.v1, action: RETURN_ERROR, target_tool: policy/search@v1, error_code: POLICY_CONFLICT}}
+    - {world_fixture_ref: world-synth-08, seed: 4429, entities: [], failure_script: {version: fault.v1, action: RETURN_ERROR, target_tool: policy/search@v1, error_code: DATA_MISSING}}
+    - {world_fixture_ref: world-synth-09, seed: 4430, entities: []}
+    - {world_fixture_ref: world-synth-10, seed: 4431, entities: []}
+    - {world_fixture_ref: world-synth-11, seed: 4432, entities: []}
+    - {world_fixture_ref: world-synth-12, seed: 4433, entities: []}
+    - {world_fixture_ref: world-synth-13, seed: 4434, entities: [], failure_script: {version: fault.v1, action: RETURN_ERROR, target_tool: logistics/query@v1, error_code: DATA_STALE}}
+    - {world_fixture_ref: world-synth-14, seed: 4435, entities: [], failure_script: {version: fault.v1, action: RETURN_ERROR, target_tool: logistics/query@v1, error_code: DATA_STALE}}
+    - {world_fixture_ref: world-synth-15, seed: 4436, entities: [], failure_script: {version: fault.v1, action: RETURN_ERROR, target_tool: logistics/query@v1, error_code: INFRA_UNAVAILABLE}}
+    - {world_fixture_ref: world-synth-16, seed: 4437, entities: [], failure_script: {version: fault.v1, action: RETURN_ERROR, target_tool: logistics/query@v1, error_code: DATA_MISSING}}
+    - {world_fixture_ref: world-synth-17, seed: 4438, entities: []}
+    - {world_fixture_ref: world-synth-18, seed: 4439, entities: []}
+    - {world_fixture_ref: world-synth-19, seed: 4440, entities: [], failure_script: {version: fault.v1, action: RETURN_ERROR, target_tool: aftersales/create@v1, error_code: ELIGIBILITY_DENIED}}
+    - {world_fixture_ref: world-synth-20, seed: 4441, entities: []}
+    - {world_fixture_ref: world-synth-21, seed: 4442, entities: []}
+    - {world_fixture_ref: world-synth-22, seed: 4443, entities: []}
+    - {world_fixture_ref: world-synth-23, seed: 4444, entities: [], failure_script: {version: fault.v1, action: BLOCK_TASK, target_tool: human/handoff@v1}}

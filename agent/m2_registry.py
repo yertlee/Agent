@@ -30,6 +30,7 @@ class ToolSpec(BaseModel):
         "logistics.query.v1": ({"carrier_code", "tracking_no"}, {"carrier_code", "tracking_no", "phone_last4"}),
         "handoff.v1": ({"summary", "reason"}, {"summary", "reason"}),
         "policy.query.v1": ({"query"}, {"query", "top_k"}),
+        "product.read.v1": ({"sku"}, {"sku"}),
     }
 
     @field_validator("risk")
@@ -121,12 +122,12 @@ def build_m2_registry() -> Registry:
     from .tool_registry import policy_rag_search_tool
 
     return Registry([
-        ToolSpec(tool_ref="order/get_info@v1", capability_ref="order/read@v1", owner="order-agent", args_schema="order.read.v1", result_schema="order.result.v1", risk="READ", implementation_mode="SIMULATED", side_effect="READ_ONLY", timeout_ms=5000, allowed_error_codes=("AUTH_IDENTITY_MISMATCH", "ORDER_NOT_FOUND", "CONFIG_MISSING", "INFRA_UNAVAILABLE"), callable=get_order_info_tool),
+        ToolSpec(tool_ref="order/get_info@v1", capability_ref="order/read@v1", owner="order-agent", args_schema="order.read.v1", result_schema="order.result.v1", risk="READ", implementation_mode="SIMULATED", side_effect="READ_ONLY", timeout_ms=5000, allowed_error_codes=("AUTH_IDENTITY_MISMATCH", "ORDER_NOT_FOUND", "DATA_MISSING", "CONFIG_MISSING", "INFRA_UNAVAILABLE"), callable=get_order_info_tool),
         ToolSpec(tool_ref="aftersales/query@v1", capability_ref="aftersales/read@v1", owner="aftersales-agent", args_schema="aftersales.query.v1", result_schema="aftersales.result.v1", risk="READ", implementation_mode="SIMULATED", side_effect="READ_ONLY", timeout_ms=5000, allowed_error_codes=("AUTH_IDENTITY_MISMATCH", "ORDER_NOT_FOUND", "DATA_MISSING"), callable=query_aftersales_tool),
-        ToolSpec(tool_ref="aftersales/create@v1", capability_ref="aftersales/write@v1", owner="aftersales-agent", args_schema="aftersales.create.v1", result_schema="aftersales.result.v1", risk="HIGH_RISK", implementation_mode="SIMULATED", side_effect="WRITE", timeout_ms=5000, allowed_error_codes=("AUTH_IDENTITY_MISMATCH", "ORDER_NOT_FOUND", "ACTIVE_CASE_EXISTS", "ELIGIBILITY_DENIED", "CONTRACT_CONFIRM_REQUIRED", "IDEMPOTENCY_CONFLICT"), callable=create_aftersales_tool),
-        ToolSpec(tool_ref="logistics/query@v1", capability_ref="logistics/read@v1", owner="logistics-agent", args_schema="logistics.query.v1", result_schema="logistics.result.v1", risk="READ", implementation_mode="SIMULATED", side_effect="READ_ONLY", timeout_ms=5000, allowed_error_codes=("DATA_MISSING", "DATA_STALE", "DATA_CONFLICT", "INFRA_UNAVAILABLE"), callable=query_logistics_snapshot_tool),
+        ToolSpec(tool_ref="aftersales/create@v1", capability_ref="aftersales/write@v1", owner="aftersales-agent", args_schema="aftersales.create.v1", result_schema="aftersales.result.v1", risk="HIGH_RISK", implementation_mode="SIMULATED", side_effect="WRITE", timeout_ms=5000, allowed_error_codes=("AUTH_IDENTITY_MISMATCH", "ORDER_NOT_FOUND", "ACTIVE_CASE_EXISTS", "ELIGIBILITY_DENIED", "ELIGIBILITY_MANUAL", "CONTRACT_CONFIRM_REQUIRED", "IDEMPOTENCY_CONFLICT"), callable=create_aftersales_tool),
+        ToolSpec(tool_ref="logistics/query@v1", capability_ref="logistics/read@v1", owner="logistics-agent", args_schema="logistics.query.v1", result_schema="logistics.result.v1", risk="READ", implementation_mode="SIMULATED", side_effect="READ_ONLY", timeout_ms=5000, allowed_error_codes=("DATA_MISSING", "DATA_STALE", "DATA_CONFLICT", "ELIGIBILITY_DENIED", "INFRA_UNAVAILABLE"), callable=query_logistics_snapshot_tool),
         ToolSpec(tool_ref="human/handoff@v1", capability_ref="human/handoff@v1", owner="supervisor", args_schema="handoff.v1", result_schema="handoff.result.v1", risk="HIGH_RISK", implementation_mode="SIMULATED", side_effect="WRITE", timeout_ms=5000, allowed_error_codes=("CONTRACT_SCHEMA_INVALID",), callable=handoff_to_human_tool),
-        ToolSpec(tool_ref="policy/search@v1", capability_ref="policy/read@v1", owner="policy-agent", args_schema="policy.query.v1", result_schema="policy.result.v1", risk="READ", implementation_mode="SIMULATED", side_effect="READ_ONLY", timeout_ms=5000, allowed_error_codes=("DATA_MISSING", "POLICY_CONFLICT"), callable=policy_rag_search_tool),
+        ToolSpec(tool_ref="policy/search@v1", capability_ref="policy/read@v1", owner="policy-agent", args_schema="policy.query.v1", result_schema="policy.result.v1", risk="READ", implementation_mode="SIMULATED", side_effect="READ_ONLY", timeout_ms=5000, allowed_error_codes=("DATA_MISSING", "POLICY_CONFLICT", "INFRA_UNAVAILABLE"), callable=policy_rag_search_tool),
     ])
 
 

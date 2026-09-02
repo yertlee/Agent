@@ -1,0 +1,17 @@
+scenario_schema:
+  schema_version: m3.scenario.v1
+  required:
+    - scenario_id
+    - category
+    - turns
+    - intent_label
+    - world_fixture_ref
+    - expected_tool_path
+    - expected_terminal_class
+    - split
+  terminal_classes: [PASS, FAILED, BLOCKED, CANCELLED]
+  version_tuple: [dataset_version, registry_version, policy_version, simulator_version, world_template_version, seed]
+  rules:
+    - "gold and expected fields are evaluator inputs, never Agent/runtime inputs"
+    - "scene_clock is UTC RFC3339 and relative time comes from the fixture"
+    - "source legacy cases preserve expected tool-path assertions"
