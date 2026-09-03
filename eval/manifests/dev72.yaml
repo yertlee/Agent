@@ -1,0 +1,9 @@
+manifest_version: m4.dataset-manifest.v1
+dataset_version: m4.dev72.v1
+wave: dev
+seed: 4072
+frozen_at: '2026-09-02T00:00:00Z'
+generated_cases: 72
+runnable: true
+sealed: false
+blind: false

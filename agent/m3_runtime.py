@@ -61,6 +61,7 @@ ALIASES = {
     "logistics/query@v1": "query_logistics_snapshot_tool",
     "policy/search@v1": "policy_rag_search_tool",
     "human/handoff@v1": "handoff_to_human_tool",
+    "product/get@v1": "product_get_tool",
 }
 PORT_TYPES = {
     "order/get_info@v1": OrderAgent,
@@ -101,6 +102,7 @@ def _derive_operations(text: str, *, legacy_compat: bool = False) -> list[str]:
     has_order = any(x in text for x in ("订单", "订单号", "查订单", "支付", "发货")) or bool(re.search(r"\b(?:ORD|20\d{8})[A-Z0-9-]*\b", text))
     has_logistics = any(x in text for x in ("物流", "快递", "运单", "承运商", "派件", "签收"))
     has_policy = any(x in text for x in ("规则", "政策", "运费", "七天无理由"))
+    has_product = any(x in text for x in ("商品", "产品", "库存", "价格", "SKU"))
     has_after = any(x in text for x in ("售后", "退款", "换货")) or ("申请" in text and "退货" in text)
     if has_policy and not has_order:
         has_after = False
@@ -119,6 +121,8 @@ def _derive_operations(text: str, *, legacy_compat: bool = False) -> list[str]:
         ops.append("aftersales/query@v1" if "进度" in text else "aftersales/create@v1")
     if has_policy and not legacy_compat:
         ops.append("policy/search@v1")
+    if has_product and not has_order and not has_after:
+        ops.append("product/get@v1")
     if not ops and legacy_compat and has_policy:
         return []
     if not ops:
@@ -140,6 +144,9 @@ def _args_for(tool_ref: str, text: str, scenario_id: str) -> dict[str, Any]:
         return {"carrier_code": "simulator", "tracking_no": match.group(0) if match else f"LOG-{scenario_id.upper()}", "phone_last4": phone}
     if tool_ref == "policy/search@v1":
         return {"query": text[:200], "top_k": 3}
+    if tool_ref == "product/get@v1":
+        sku_match = re.search(r"\bSKU[-A-Z0-9]+\b", text, re.I)
+        return {"sku": sku_match.group(0).upper() if sku_match else "SKU-FIXTURE-001"}
     return {"summary": text[:200] or "customer escalation", "reason": "human review requested"}
 
 
@@ -182,7 +189,9 @@ class M3ScenarioRunner:
 
     def _event(self, repo: M2Repository, run: Run, event_type: str, *, parent: str | None = None, task_id: str | None = None, attempt_id: str | None = None, payload: dict[str, Any] | None = None, actor: str = "runtime"):
         row = repo.conn.execute("SELECT next_seq_no FROM runs WHERE run_id=?", (run.run_id,)).fetchone()
-        event = build_event(run_id=run.run_id, session_id=run.session_id, plan_revision_id=run.plan_revision_id, task_id=task_id, attempt_id=attempt_id, event_type=event_type, seq_no=int(row[0]), parent_event_id=parent, payload=payload or {}, actor=actor)
+        scene_clock = run.shared_state.get("scene_clock") if isinstance(run.shared_state, dict) else None
+        parsed_clock = datetime.fromisoformat(str(scene_clock).replace("Z", "+00:00")) if scene_clock else None
+        event = build_event(run_id=run.run_id, session_id=run.session_id, plan_revision_id=run.plan_revision_id, task_id=task_id, attempt_id=attempt_id, event_type=event_type, seq_no=int(row[0]), parent_event_id=parent, payload=payload or {}, actor=actor, scene_clock=parsed_clock)
         repo.append_m2_event(event)
         return event
 
@@ -192,7 +201,12 @@ class M3ScenarioRunner:
         if not turns:
             raise ValueError(f"scenario {scenario_id} must embed executable turns")
         text = " ".join(str(turn) for turn in turns)
-        fixture = _load_fixture(str(case.get("world_fixture_ref") or ""))
+        inline_world = case.get("world_snapshot")
+        if inline_world:
+            fixture = dict(inline_world.model_dump(mode="json") if hasattr(inline_world, "model_dump") else inline_world)
+            fixture.setdefault("world_fixture_ref", str(case.get("world_fixture_ref") or "world-inline-v1"))
+        else:
+            fixture = _load_fixture(str(case.get("world_fixture_ref") or ""))
         world_hash = sha256_json(fixture)
         gold_hash = _gold_fixture_hash(str(case.get("world_fixture_ref") or ""))
         if gold_hash and world_hash != str(gold_hash):
@@ -207,7 +221,7 @@ class M3ScenarioRunner:
         repo = M2Repository(str(db_path))
         try:
             repo.create_session(session_id, "fixture-user")
-            run = Run(run_id=run_id, session_id=session_id, initial_world_hash=world_hash, shared_state={"scenario_id": scenario_id, "world_fixture_ref": fixture["world_fixture_ref"]})
+            run = Run(run_id=run_id, session_id=session_id, initial_world_hash=world_hash, shared_state={"scenario_id": scenario_id, "world_fixture_ref": fixture["world_fixture_ref"], "scene_clock": fixture.get("scene_clock")})
             repo.create_run(run)
             self._event(repo, run, "RUN_CREATED", payload={"scenario_id": scenario_id, "world_hash": world_hash})
             candidate = self.router.classify(text)

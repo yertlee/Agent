@@ -1,0 +1,64 @@
+manifest_version: kb-manifest.m4.v1
+kb_version: kb.m4.v1
+source_root: ../../docs/kb
+source_pattern: '*.md'
+builder_version: kb-builder.m4.v1
+embedding_model: deterministic-dense.v1
+tokenizer: unicode-nfkc.v1
+top_k: 5
+rrf_constant: 60
+candidate_k: 20
+score_threshold: 0.0
+freeze_policy: source_and_chunk_sha256
+manifest_checksum: 0996d7b5552447c20ac1c45c910d9bca65988ae61cf1e45dc86dd74ad755c918
+rag_cases:
+  - scenario_id: rag-seven-day-return
+    query: 七天无理由退货
+    gold_chunk_ids: [0754ea1b1b7cc6a6995177dcdc3557de]
+    gold_evidence:
+      - {source_id: 481b6aa5c962399960a77cb9, chunk_id: 0754ea1b1b7cc6a6995177dcdc3557de}
+  - scenario_id: rag-refund-arrival
+    query: 退款多久到账
+    gold_chunk_ids: [3da6e5edb1cec032bd023e6462e4c860]
+    gold_evidence:
+      - {source_id: 20588e58f9601f97731d1b66, chunk_id: 3da6e5edb1cec032bd023e6462e4c860}
+  - scenario_id: rag-return-shipping-fee
+    query: 退货运费谁承担
+    gold_chunk_ids: [c398d53bb89e46391d358df878b9d0f3]
+    gold_evidence:
+      - {source_id: 20588e58f9601f97731d1b66, chunk_id: c398d53bb89e46391d358df878b9d0f3}
+  - scenario_id: rag-after-sales-dispute
+    query: 售后争议如何处理
+    gold_chunk_ids: [07ae499dc0894fd8d14969d57ab2eb15]
+    gold_evidence:
+      - {source_id: 20588e58f9601f97731d1b66, chunk_id: 07ae499dc0894fd8d14969d57ab2eb15}
+  - scenario_id: rag-resale-condition
+    query: 商品不影响二次销售的标准
+    gold_chunk_ids: [21dfe69129ade920631c48e66d7eaf79]
+    gold_evidence:
+      - {source_id: 481b6aa5c962399960a77cb9, chunk_id: 21dfe69129ade920631c48e66d7eaf79}
+  - scenario_id: rag-seller-refusal
+    query: 卖家拒绝退货怎么办
+    gold_chunk_ids: [77351dd62a2829e1808933a9b7dd70de]
+    gold_evidence:
+      - {source_id: cea71b18654568a2321417d0, chunk_id: 77351dd62a2829e1808933a9b7dd70de}
+  - scenario_id: rag-application-time-limit
+    query: 退货申请时限
+    gold_chunk_ids: [1972c55bc0d11d61c6085f7208c9ac29]
+    gold_evidence:
+      - {source_id: cea71b18654568a2321417d0, chunk_id: 1972c55bc0d11d61c6085f7208c9ac29}
+  - scenario_id: rag-refund-processing-time
+    query: 退款处理时效
+    gold_chunk_ids: [9aee9a45fd3e0093628b077f3a6ccb87]
+    gold_evidence:
+      - {source_id: cea71b18654568a2321417d0, chunk_id: 9aee9a45fd3e0093628b077f3a6ccb87}
+  - scenario_id: rag-return-after-delivery
+    query: 物流签收后退货
+    gold_chunk_ids: [6cd14f4ff4dcbb59b84f9a7a3f2d3e7a]
+    gold_evidence:
+      - {source_id: cea71b18654568a2321417d0, chunk_id: 6cd14f4ff4dcbb59b84f9a7a3f2d3e7a}
+  - scenario_id: rag-platform-intervention
+    query: 平台介入争议
+    gold_chunk_ids: [829c788d66d3256cdb4da9a8e5e083f8]
+    gold_evidence:
+      - {source_id: 20588e58f9601f97731d1b66, chunk_id: 829c788d66d3256cdb4da9a8e5e083f8}

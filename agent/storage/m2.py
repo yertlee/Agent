@@ -38,6 +38,25 @@ class M2Repository(M1Repository):
         self.conn.execute("UPDATE runs SET next_seq_no=?,updated_at=? WHERE run_id=?", (event.seq_no + 1, _now(), event.run_id))
 
     def append_m2_event(self, event) -> None:
+        sealed = self.conn.execute(
+            "SELECT 1 FROM trace_manifests WHERE run_id=?", (event.run_id,)
+        ).fetchone()
+        if sealed:
+            now = _now()
+            try:
+                self.conn.execute("BEGIN IMMEDIATE")
+                self.conn.execute(
+                    "INSERT OR IGNORE INTO late_event_audit "
+                    "(audit_id,run_id,event_id,reason,received_at,created_at,updated_at) "
+                    "VALUES (?,?,?,?,?,?,?)",
+                    (f"late_{uuid4().hex}", event.run_id, event.trace_id,
+                     "TRACE_MANIFEST_SEALED", now, now, now),
+                )
+                self.conn.commit()
+            except Exception:
+                self.conn.rollback()
+                raise
+            raise RuntimeError("trace manifest is sealed; event recorded only in late_event_audit")
         try:
             self.conn.execute("BEGIN IMMEDIATE")
             self._append_m2_event_locked(event)

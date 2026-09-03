@@ -1,0 +1,10 @@
+manifest_version: m4.dataset-manifest.v1
+dataset_version: m4.safety-dev10.v1
+wave: dev
+seed: 4010
+frozen_at: '2026-09-02T00:00:00Z'
+generated_cases: 10
+category: safety
+runnable: true
+sealed: false
+blind: false
