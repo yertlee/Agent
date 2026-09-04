@@ -8,6 +8,8 @@ numpy
 faiss-cpu
 sentence-transformers
 typing-extensions
+fastapi
+uvicorn
 
 # 说明：
 # - 本仓库不包含 sqlite 数据库与 seed，仅保留 Agent 运行/评测骨架。

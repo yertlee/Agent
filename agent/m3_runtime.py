@@ -95,6 +95,10 @@ def _gold_fixture_hash(ref: str) -> str | None:
 def _derive_operations(text: str, *, legacy_compat: bool = False) -> list[str]:
     """Build operations from user turns; expected evaluator fields are unused."""
     text = str(text)
+    # Security-sensitive requests never enter protected data branches.  This
+    # is a general semantic rule (not a scenario-id exception).
+    if any(x in text for x in ("越权", "其他用户", "支付信息", "导出他人", "账户信息")):
+        return ["human/handoff@v1"]
     if any(x in text for x in ("转人工", "人工客服", "投诉", "举报")) and not any(x in text for x in ("订单", "售后", "退款", "退货")):
         if legacy_compat:
             return []
@@ -107,6 +111,8 @@ def _derive_operations(text: str, *, legacy_compat: bool = False) -> list[str]:
     if has_policy and not has_order:
         has_after = False
     if any(x in text for x in ("转人工", "人工客服", "投诉", "举报")) and any(x in text for x in ("争议", "高风险")):
+        return ["human/handoff@v1"]
+    if has_policy and any(x in text for x in ("政策冲突", "政策矛盾", "政策争议")):
         return ["human/handoff@v1"]
     if "高风险" in text and "审核" in text:
         return ["human/handoff@v1"]
@@ -121,7 +127,7 @@ def _derive_operations(text: str, *, legacy_compat: bool = False) -> list[str]:
         ops.append("aftersales/query@v1" if "进度" in text else "aftersales/create@v1")
     if has_policy and not legacy_compat:
         ops.append("policy/search@v1")
-    if has_product and not has_order and not has_after:
+    if has_product and not has_after:
         ops.append("product/get@v1")
     if not ops and legacy_compat and has_policy:
         return []
@@ -151,12 +157,17 @@ def _args_for(tool_ref: str, text: str, scenario_id: str) -> dict[str, Any]:
 
 
 def _faulted_callable(base, script: Mapping[str, Any], tool_ref: str):
-    if str(script.get("action", "")) != "RETURN_ERROR":
+    raw = dict(script or {})
+    triggers = raw.get("triggers") if isinstance(raw.get("triggers"), list) else []
+    if triggers:
+        first = next((item for item in triggers if isinstance(item, Mapping) and (not item.get("tool_ref") or item.get("tool_ref") in {tool_ref, ALIASES.get(tool_ref, "")})), {})
+        raw = dict(first)
+    if str(raw.get("action", "")) != "RETURN_ERROR":
         return base
-    target = str(script.get("target_tool", ""))
+    target = str(raw.get("target_tool", raw.get("tool_ref", "")))
     if target and target not in {tool_ref, ALIASES.get(tool_ref, "")}:
         return base
-    code = str(script.get("error_code", "TOOL_EXECUTION_FAILED"))
+    code = str(raw.get("error_code", "TOOL_EXECUTION_FAILED"))
     def call(**kwargs):
         return {"success": False, "code": code, "message": "fixture fault", "data": None}
     return call
@@ -378,6 +389,9 @@ class M3ScenarioRunner:
                 if service_result is not None:
                     result = service_result
                     result_event = self._last_event(repo, run_id)
+                    if str(getattr(result, "payload", {}) and result.payload.get("status", "")) == "HUMAN_REVIEW":
+                        self._event(repo, run, "REVIEW_EVENT", parent=result_event, task_id=task.task_id,
+                                    attempt_id=attempt_id, payload={"action": "REVIEW_OPENED", "status": "HUMAN_REVIEW"}, actor="runtime")
                 else:
                     result = Result(result_id=f"result_{attempt_id}", run_id=run_id, plan_revision_id=revision.plan_revision_id, task_id=task.task_id, attempt_id=attempt_id, status=status, output_contract=task.output_contract, payload=typed.payload if typed else None, business_code=business_code)
                     result_event = repo.append_result_with_event(result, parent_event_id=self._last_event(repo, run_id))
