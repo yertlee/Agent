@@ -14,6 +14,7 @@ from eval.harness import (
     EvaluationInput,
     FailureScript,
     FailureTrigger,
+    FreezeBundle,
     ReplayRunner,
     ScenarioLoader,
     ToolSimulator,
@@ -203,6 +204,15 @@ def test_freeze_bundle_rejects_sensitive_value_hidden_in_turn(tmp_path):
     with pytest.raises(ValueError, match="sensitive"):
         recorder.freeze_bundle(world_snapshot=world, final_response="", final_fingerprint="f" * 64,
             failure_script=FailureScript(), run_context={"turns": ["手机号 13800138000"]}, version_tuple=_versions())
+
+
+def test_version_tuple_preserves_original_config_hash_without_sensitive_false_positive():
+    value = _versions().model_copy(update={"config": "r2.config." + "1234567890123456789012345678901234567890123456789012345678901234"})
+    assert FreezeBundle._contains_sensitive({"version_tuple": value.model_dump(mode="python")}) is None
+    assert FreezeBundle._contains_sensitive({"run_context": {"note": "13800138000"}}) == "run_context.note"
+    assert FreezeBundle._contains_sensitive({"trace": {"path": "artifacts/run-12345678901234567890/trace.jsonl"}}) is None
+    assert FreezeBundle._contains_sensitive({"arbitrary": {"path": "13800138000"}}) == "arbitrary.path"
+    assert FreezeBundle._contains_sensitive({"evidence_refs": ["123456789012345678901234567890"]}) is None
 
 
 def test_normal_scenario_cannot_bypass_public_runtime_with_tool_calls():

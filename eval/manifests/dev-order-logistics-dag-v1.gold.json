@@ -1,0 +1,30 @@
+{
+  "schema_version": "r2.eval.gold.v1",
+  "manifest_id": "dev-order-logistics-dag-v1",
+  "cases": [
+    {"case_id":"valid_01","expected_status":"SUCCEEDED","expected_code":"OK","expected_intent":"order_to_logistics","expected_tool_path":["order/get_info@v1","logistics/query@v1"]},
+    {"case_id":"valid_02","expected_status":"SUCCEEDED","expected_code":"OK","expected_intent":"order_to_logistics","expected_tool_path":["order/get_info@v1","logistics/query@v1"]},
+    {"case_id":"valid_03","expected_status":"SUCCEEDED","expected_code":"OK","expected_intent":"order_to_logistics","expected_tool_path":["order/get_info@v1","logistics/query@v1"]},
+    {"case_id":"valid_04","expected_status":"SUCCEEDED","expected_code":"OK","expected_intent":"order_to_logistics","expected_tool_path":["order/get_info@v1","logistics/query@v1"]},
+    {"case_id":"valid_05","expected_status":"SUCCEEDED","expected_code":"OK","expected_intent":"order_to_logistics","expected_tool_path":["order/get_info@v1","logistics/query@v1"]},
+    {"case_id":"valid_06","expected_status":"SUCCEEDED","expected_code":"OK","expected_intent":"order_to_logistics","expected_tool_path":["order/get_info@v1","logistics/query@v1"]},
+    {"case_id":"valid_07","expected_status":"SUCCEEDED","expected_code":"OK","expected_intent":"order_only","expected_tool_path":["order/get_info@v1"]},
+    {"case_id":"valid_08","expected_status":"SUCCEEDED","expected_code":"OK","expected_intent":"logistics_only","expected_tool_path":["logistics/query@v1"]},
+    {"case_id":"unauthorized_01","expected_status":"FAILED","expected_code":"AUTH_IDENTITY_MISMATCH","expected_intent":"order_to_logistics","expected_tool_path":["order/get_info@v1"]},
+    {"case_id":"unauthorized_02","expected_status":"FAILED","expected_code":"AUTH_IDENTITY_MISMATCH","expected_intent":"order_to_logistics","expected_tool_path":["order/get_info@v1"]},
+    {"case_id":"unauthorized_03","expected_status":"FAILED","expected_code":"AUTH_IDENTITY_MISMATCH","expected_intent":"order_to_logistics","expected_tool_path":["order/get_info@v1"]},
+    {"case_id":"unauthorized_04","expected_status":"FAILED","expected_code":"AUTH_IDENTITY_MISMATCH","expected_intent":"order_to_logistics","expected_tool_path":["order/get_info@v1"]},
+    {"case_id":"missing_order_01","expected_status":"FAILED","expected_code":"ORDER_NOT_FOUND","expected_intent":"order_to_logistics","expected_tool_path":["order/get_info@v1"]},
+    {"case_id":"missing_order_02","expected_status":"FAILED","expected_code":"ORDER_NOT_FOUND","expected_intent":"order_to_logistics","expected_tool_path":["order/get_info@v1"]},
+    {"case_id":"missing_order_03","expected_status":"FAILED","expected_code":"ORDER_NOT_FOUND","expected_intent":"order_to_logistics","expected_tool_path":["order/get_info@v1"]},
+    {"case_id":"missing_order_04","expected_status":"FAILED","expected_code":"ORDER_NOT_FOUND","expected_intent":"order_to_logistics","expected_tool_path":["order/get_info@v1"]},
+    {"case_id":"missing_entity_01","expected_status":"NEEDS_CLARIFICATION","expected_code":"CLARIFICATION_REQUIRED","expected_intent":"clarify","expected_tool_path":[]},
+    {"case_id":"missing_entity_02","expected_status":"NEEDS_CLARIFICATION","expected_code":"CLARIFICATION_REQUIRED","expected_intent":"clarify","expected_tool_path":[]},
+    {"case_id":"missing_entity_03","expected_status":"NEEDS_CLARIFICATION","expected_code":"CLARIFICATION_REQUIRED","expected_intent":"clarify","expected_tool_path":[]},
+    {"case_id":"missing_entity_04","expected_status":"BLOCKED","expected_code":"SAFE_STOP","expected_intent":"safe_stop","expected_tool_path":[]},
+    {"case_id":"stale_01","expected_status":"FAILED","expected_code":"DATA_STALE","expected_intent":"freshness","expected_tool_path":["order/get_info@v1","logistics/query@v1"]},
+    {"case_id":"stale_02","expected_status":"FAILED","expected_code":"DATA_STALE","expected_intent":"freshness","expected_tool_path":["order/get_info@v1","logistics/query@v1"]},
+    {"case_id":"conflict_01","expected_status":"FAILED","expected_code":"DATA_CONFLICT","expected_intent":"conflict","expected_tool_path":["order/get_info@v1","logistics/query@v1"]},
+    {"case_id":"replan_01","expected_status":"SUCCEEDED","expected_code":"OK","expected_intent":"bounded_replan","expected_tool_path":["order/get_info@v1","logistics/query@v1","order/get_info@v1","logistics/query@v1"]}
+  ]
+}

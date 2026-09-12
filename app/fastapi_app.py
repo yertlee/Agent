@@ -25,6 +25,7 @@ class ChatRequest(BaseModel):
     run_id: str | None = Field(default=None, min_length=1, max_length=128, pattern=r"^[A-Za-z0-9][A-Za-z0-9_.-]*$")
     wait: str = Field(default="terminal", pattern=r"^(terminal|none)$")
     cancel: bool = False
+    mode: str = Field(default="simulated", pattern=r"^(live|simulated)$")
 
     @field_validator("message")
     @classmethod
@@ -103,7 +104,10 @@ def create_app(*, runtime: RuntimePort | None = None) -> FastAPI:
                     except PermissionError:
                         raise HTTPException(status_code=403, detail={"code": "AUTH_OWNERSHIP_DENIED", "message": "run is not owned by authenticated principal"})
                 raise HTTPException(status_code=409, detail={"code": "OPERATION_NOT_SUPPORTED", "message": "synchronous runtime does not support cancellation or nonterminal wait"})
-            result = service.chat(session_id=payload.session_id, user_id=user_id, message=payload.message, run_id=payload.run_id)
+            if payload.mode == "simulated":
+                result = service.chat(session_id=payload.session_id, user_id=user_id, message=payload.message, run_id=payload.run_id)
+            else:
+                result = service.interactive_chat(session_id=payload.session_id, user_id=user_id, message=payload.message, mode=payload.mode, run_id=payload.run_id)
             return ChatResponse(run_id=result.run_id, session_id=result.session_id, status=result.status, answer=result.answer)
         except KeyError:
             raise HTTPException(status_code=404, detail={"code": "RUN_NOT_FOUND", "message": "run not found"})
@@ -111,6 +115,9 @@ def create_app(*, runtime: RuntimePort | None = None) -> FastAPI:
             raise HTTPException(status_code=403, detail={"code": "AUTH_OWNERSHIP_DENIED", "message": "run is not owned by authenticated principal"})
         except ValueError as exc:
             raise HTTPException(status_code=422, detail={"code": "INVALID_CHAT", "message": str(exc)})
+        except RuntimeError as exc:
+            code = getattr(exc, "code", "RUNTIME_FAILED")
+            raise HTTPException(status_code=422, detail={"code": code, "message": "interactive runtime failed"})
 
     @app.get("/api/trace/{run_id}", responses={401: {"model": ErrorEnvelope}, 403: {"model": ErrorEnvelope}, 404: {"model": ErrorEnvelope}, 409: {"model": ErrorEnvelope}})
     def trace(run_id: str, user_id: str = Depends(auth)) -> dict[str, Any]:

@@ -1,0 +1,40 @@
+{
+  "dataset_version": "r3.5.validation-v2.v1",
+  "created_after_candidate_freeze": true,
+  "candidate_freeze_sha256": "ed6651144bad3835df8075506333d707510e9a36d792b9ee6c7ee56d39e9d2eb",
+  "annotation_owner": "primary-auditor",
+  "N": 24,
+  "answerable_N": 15,
+  "abstention_N": 9,
+  "files": {
+    "validation-v2-inputs.jsonl": {
+      "sha256": "b25e665635800e9df727b3d0d260be015e72abb4eae3cb6faa733855eef6bceb",
+      "lines": 24
+    },
+    "validation-v2-gold.jsonl": {
+      "sha256": "0a213d9ba268354df7c296b6f0467a27bb5ccafa766566bdf5e902b75f27d967",
+      "lines": 24
+    }
+  },
+  "independence": {
+    "exact_query_overlap_count": 0,
+    "family_id_overlap_count": 0,
+    "claim_family_label_overlap_count": 0,
+    "max_char_3gram_jaccard": 0.533333,
+    "max_similarity_pair": {
+      "validation_case_id": "r35-val2-019",
+      "dev_case_id": "r35-dev-017"
+    },
+    "gold_source_signature_overlap": {
+      "numerator": 12,
+      "denominator": 17,
+      "note": "same frozen 24-chunk corpus; overlap is reported, not hidden"
+    }
+  },
+  "rules": [
+    "no implementation agent access before creation",
+    "no runtime or evaluator changes after candidate freeze",
+    "single validation execution",
+    "failures remain in denominators"
+  ]
+}

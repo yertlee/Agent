@@ -319,16 +319,28 @@ class FreezeBundle(BaseModel):
             # redaction markers, but never phone/card-like raw values hidden
             # inside otherwise innocuous text fields such as a user turn.
             leaf = path.rsplit(".", 1)[-1].lower()
+            semantic_leaf = re.sub(r"\[\d+\]$", "", leaf)
+            # Every VersionTuple member is a provenance coordinate.  Values
+            # such as ``r2.config.<sha256>`` must retain the original digest;
+            # long digit runs inside that digest are not phone/card data.
+            if path.startswith("version_tuple."):
+                return None
+            artifact_path = semantic_leaf == "path" and (
+                path in {"trace.path", "final_response.path", "world_snapshot.path", "failure_script.path", "run_context.path"}
+                or bool(re.fullmatch(r"(?:plan_revisions|results)\[\d+\]\.path", path))
+            )
+            if artifact_path:
+                return None
             # UUIDs/event references are identifiers, not payment/phone
             # values.  A UUID can contain a 15--19 digit run after the
             # separators are removed, so never apply value-level PII checks
             # to identifier/hash/timestamp fields.  Sensitive *field names*
             # are still checked above (e.g. ``phone`` or ``payment``).
-            if leaf.endswith(("_id", "_ids", "_ref", "_refs", "_hash", "_checksum", "_fingerprint")) or leaf in {
+            if semantic_leaf.endswith(("_id", "_ids", "_ref", "_refs", "_hash", "_checksum", "_fingerprint")) or semantic_leaf in {
                 "id", "ids", "trace", "timestamp", "occurred_at", "scene_clock",
             }:
                 return None
-            if leaf in {"checksum", "manifest_hash"}:
+            if semantic_leaf in {"checksum", "manifest_hash"}:
                 return None
             compact = re.sub(r"[\s-]", "", value)
             if re.search(r"(?<!\d)1[3-9]\d{9}(?!\d)", compact):

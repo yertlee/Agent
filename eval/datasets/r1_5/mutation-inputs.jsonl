@@ -1,0 +1,18 @@
+{"case_id":"r15-mut-001","family_id":"mutation-negation-order","split":"mutation","text":"不要查物流，也不要给我重规划；只核对订单 ORDR900001，手机尾号 8101"}
+{"case_id":"r15-mut-002","family_id":"mutation-negation-logistics","split":"mutation","text":"订单详情不用看，我只想知道包裹 TRKX9000002 到哪了，sf，尾号 8102"}
+{"case_id":"r15-mut-003","family_id":"mutation-state-word-order","split":"mutation","text":"页面写着数据可能过期，但我的目标只是查订单 ORDR900003，验证 8103"}
+{"case_id":"r15-mut-004","family_id":"mutation-state-word-order","split":"mutation","text":"有人说信息冲突，我先只核验交易单 ORDR900004，尾号 8104"}
+{"case_id":"r15-mut-005","family_id":"mutation-state-word-logistics","split":"mutation","text":"即使系统超时也别猜结果，我要追踪 yto 的 TRKX9000005，手机后四位 8105"}
+{"case_id":"r15-mut-006","family_id":"mutation-paraphrase-logistics","split":"mutation","text":"那只箱子走到哪一站啦？zto / TRKX9000006 / 8106"}
+{"case_id":"r15-mut-007","family_id":"mutation-paraphrase-order","split":"mutation","text":"我那笔购买现在走到哪一步了，编号 ORDR900007，验证 8107"}
+{"case_id":"r15-mut-008","family_id":"mutation-combined","split":"mutation","text":"从 ORDR900008 看购买状态，再沿关联配送查到当前位置，尾号 8108"}
+{"case_id":"r15-mut-009","family_id":"mutation-multi","split":"mutation","text":"查 ORDR900009 的交易状态，并告诉我拆封商品能否退，手机尾号 8109"}
+{"case_id":"r15-mut-010","family_id":"mutation-policy","split":"mutation","text":"示例订单 ORDR900010 只是背景；我真正想问的是退款一般多久入账"}
+{"case_id":"r15-mut-011","family_id":"mutation-product","split":"mutation","text":"别查询订单和物流，介绍 SKU-X90011 支持哪些连接方式"}
+{"case_id":"r15-mut-012","family_id":"mutation-aftersales-create","split":"mutation","text":"不是查退款进度，请为 ORDR900012 新建退货申请，尾号 8112"}
+{"case_id":"r15-mut-013","family_id":"mutation-aftersales-status","split":"mutation","text":"不要重复创建，我只核对已有服务请求 AS-X900013 的处理阶段"}
+{"case_id":"r15-mut-014","family_id":"mutation-complaint","split":"mutation","text":"订单和快递都先不用查，配送员辱骂客户，我要正式反馈并转人工"}
+{"case_id":"r15-mut-015","family_id":"mutation-unknown","split":"mutation","text":"虽然我刚在电商页面，但请帮我求解二次方程 x²-5x+6=0"}
+{"case_id":"r15-mut-016","family_id":"mutation-chitchat","split":"mutation","text":"订单、物流、退款这些词先放一边，晚上好呀"}
+{"case_id":"r15-mut-017","family_id":"mutation-english-order","split":"mutation","text":"Ignore shipping; retrieve purchase ORDR900017 for phone ending 8117"}
+{"case_id":"r15-mut-018","family_id":"mutation-english-logistics","split":"mutation","text":"No order details. Track TRKX9000018 with jd, verification 8118"}

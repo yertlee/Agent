@@ -16,6 +16,8 @@ from typing import Any
 
 from eval.harness import FailureScript, TraceRecorder, VersionTuple, WorldStateBuilder, verify_bundle
 from eval.harness.contracts import FreezeBundle
+from eval.harness.contracts import ExecutionMode
+from .interactive_runtime import InteractiveResult, InteractiveRuntime
 from .m3_runtime import M3ScenarioRunner
 from .storage.m2 import M2Repository
 
@@ -68,10 +70,69 @@ def _public_value(value: Any) -> Any:
 
 class RuntimePort:
     """The sole public write entry point for a chat run."""
-    def __init__(self, *, artifact_root: str | Path | None = None, runner: M3ScenarioRunner | None = None):
+    def __init__(self, *, artifact_root: str | Path | None = None, runner: M3ScenarioRunner | None = None, interactive_runtime: InteractiveRuntime | None = None):
         self.artifact_root = Path(artifact_root or os.getenv("M5_ARTIFACT_ROOT", "runtime/m5"))
         self.artifact_root.mkdir(parents=True, exist_ok=True)
         self.runner = runner or M3ScenarioRunner(db_dir=self.artifact_root / "db")
+        self.interactive_runtime = interactive_runtime
+
+    def interactive_chat(self, *, session_id: str | None, user_id: str, message: str,
+                         mode: ExecutionMode | str = ExecutionMode.LIVE,
+                         run_id: str | None = None) -> InteractiveResult:
+        """Explicit R1 live/simulated boundary; no mode fallback is permitted."""
+        runtime = self.interactive_runtime
+        if runtime is None:
+            db_path = os.getenv("ECOMMERCE_DB_PATH") or str(Path("ecommerce.db"))
+            runtime = InteractiveRuntime(db_path=db_path, artifact_root=self.artifact_root / "interactive")
+        authenticated_owner = owner_ref(user_id)
+        inherited_session = session_id
+        if run_id:
+            _safe_run_id(run_id)
+            metadata_path = self._metadata(run_id)
+            if not metadata_path.is_file():
+                raise KeyError(run_id)
+            prior = json.loads(metadata_path.read_text(encoding="utf-8"))
+            if prior.get("owner_ref") != authenticated_owner:
+                raise PermissionError("run ownership does not match authenticated principal")
+            inherited_session = str(prior["session_id"])
+            # A continuation is always a fresh immutable runtime run.  The
+            # supplied id is only an ownership/session reference.
+            run_id = None
+        result = runtime.chat(session_id=inherited_session, user_id=user_id, message=message, mode=mode, run_id=run_id)
+        bundle = result.freeze_bundle
+        if bundle is None:
+            raise RuntimeError("interactive runtime did not return a frozen bundle")
+        verified = verify_bundle(bundle)
+        if not verified.get("ok"):
+            raise RuntimeError("interactive runtime produced an unverifiable freeze bundle")
+        root = self.artifact_root / _safe_run_id(result.run_id)
+        root.mkdir(parents=True, exist_ok=True)
+        bundle_path = root / "bundle.json"
+        fd, temp_name = __import__("tempfile").mkstemp(prefix=".bundle.", suffix=".tmp", dir=str(root), text=True)
+        try:
+            with os.fdopen(fd, "w", encoding="utf-8", newline="\n") as handle:
+                handle.write(bundle.model_dump_json(indent=2))
+                handle.flush(); os.fsync(handle.fileno())
+            os.replace(temp_name, bundle_path)
+        except Exception:
+            try: os.unlink(temp_name)
+            except OSError: pass
+            raise
+        metadata_path = self._metadata(result.run_id)
+        metadata_path.parent.mkdir(parents=True, exist_ok=True)
+        metadata = {"owner_ref": authenticated_owner, "session_id": result.session_id,
+                    "created_at": datetime.now(timezone.utc).isoformat(), "bundle": str(bundle_path)}
+        fd, temp_name = __import__("tempfile").mkstemp(prefix=".ownership.", suffix=".tmp", dir=str(metadata_path.parent), text=True)
+        try:
+            with os.fdopen(fd, "w", encoding="utf-8", newline="\n") as handle:
+                json.dump(metadata, handle, sort_keys=True)
+                handle.flush(); os.fsync(handle.fileno())
+            os.replace(temp_name, metadata_path)
+        except Exception:
+            try: os.unlink(temp_name)
+            except OSError: pass
+            raise
+        return result
 
     def _metadata(self, run_id: str) -> Path:
         return self.artifact_root / _safe_run_id(run_id) / "ownership.json"

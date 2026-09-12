@@ -1,139 +1,75 @@
-# LangGraph Ecommerce Customer Service Agent
+# 电商客服 Multi-Agent：意图路由 · Agent 协作 · 安全写 · 执行型评测
 
-这是一个基于 LangGraph 的电商客服 Agent 项目。当前版本已经具备稳定的主图运行骨架，以及 `ORDER / POLICY / AFTERSALES` 三条业务子链路，并在售后子图内接入了 `cache-first` 的快递物流查询能力。
+一个面向**商品 / 订单 / 物流 / 政策 / 售后**五类请求的客服 Multi-Agent 系统。用户用自然语言提问，LLM Router/Planner 把它转成结构化计划，Supervisor 按计划把任务派发给领域 Agent（版本化 Agent 间消息协议），真实调用工具完成任务；售后这类高风险动作走"预览 → 用户确认 → 服务端复核 → 单事务提交"。
 
-## 项目结构
+## 核心结果
 
-- `agent/`: 核心 Agent（主图、子图、工具、verifier）
-- `app/`: Streamlit 本地演示界面
-- `eval/`: 本地可复现评测（cases / evaluator / report）
-- `tests/`: 单元测试（物流 pipeline、售后子图等）
-- `docs/`: 设计与知识库（`docs/kb/`），以及静态资源（`docs/assets/`）
-- `scripts/`: 常用脚本（例如一键跑 eval）
+dev 集 123 个唯一 case，单次运行；真实模型与基线在同一套数据上测量。
 
-说明：
+| 指标 | 本系统 | 关键词基线 |
+|---|---:|---:|
+| 意图 Core Macro-F1（11 类） | **0.853** | 0.463 |
+| exact handoff | **0.764** | 0.350 |
+| 真实任务完成率 | **0.769** | 0.479 |
+| 不必要澄清率（越低越好） | **0.057** | 0.390 |
 
-- `reports/`、`runtime/`、`dist/` 为运行生成物/缓存目录，默认不建议提交到 GitHub（已在 `.gitignore` 中忽略）。
-- `*.db` 默认忽略；建议自行在本地生成/维护 `ecommerce.db`，并通过 `ECOMMERCE_DB_PATH` 指向它。
+口径、分母、失败分析与限制见 [`docs/results.md`](docs/results.md)；完整逐例证据见 [`docs/evidence/`](docs/evidence/)。`MULTI_INTENT` 是辅助标签（dev 中 gold support 为 0），Core 11 类与 12 类兼容值（0.782）同时给出，避免混用。
 
-## 当前能力
+## 架构
 
-- 主图保持固定骨架：
-  `START -> ingest -> classify -> planner -> dispatch -> specialist/subgraph -> verifier -> (await_user | finalizer | handoff) -> END`
-- 主图只按业务能力路由，不按数据源路由。
-- `ORDER` 子图负责订单主数据查询。
-- `POLICY` 子图负责规则检索和证据整理。
-- `AFTERSALES` 子图已经收口为：
-  `aftersales_slot_check -> aftersales_intent_split -> order_profile_lookup -> logistics_need_check -> logistics_slot_check -> logistics_snapshot_lookup -> eligibility_check -> create_or_query_aftersales -> result_interpret -> maybe_handoff`
-- 物流查询采用 `cache -> kuaidi100/mock provider fallback`。
-- verifier 已对常见物流错误码做最小收口：
-  - `400 / 408 -> ask_user`
-  - `500 / QUERY_TOO_FREQUENT / HTTP|NETWORK|UNKNOWN -> explain_limit`
-  - `501 / 502 / 503 / 601 / config|parse error -> handoff`
+```mermaid
+flowchart TD
+    U[用户消息] --> R[Router: 意图 / 实体候选 / 缺失信息]
+    R --> P[Planner: 节点 + 依赖 + typed binding]
+    P --> V{计划校验器}
+    V -->|合法| N[运行时归一化: 能力参数契约]
+    N --> A[A2A 运行时: 幂等 / 依赖 / 有界重试 / 迟到隔离]
+    A --> D[Product · Order · Logistics · Policy · AfterSales]
+    D --> RES[canonical Result]
+    RES --> OUT[回答 / 澄清 / 拒绝 / 人工升级 / 受控写]
+```
 
-## 运行前准备
+几条关键设计：
 
-### 1. 安装依赖
+- **单一权威计划**：能力集合与依赖从节点/边派生，不要求模型重复填写拓扑或能力汇总。
+- **模型与规则分工**：结构化编号（订单号、运单号、SKU、手机号、售后类型、承运商）由确定性规则给候选，语义角色由模型判断；会话手机号与上游派生字段由运行时按契约补齐，不向用户追问。
+- **受控写**：动作化确认令牌（申请/取消/修改分离）+ 状态 CAS + 幂等指纹 + 审计与 outbox，同一事务提交；单轮停在"等待确认"。
+- **执行型评测**：模型生成的计划经同一个运行时真实执行，检查终态与业务结果；无效计划不执行、不计成功。
+
+详见 [`docs/architecture.md`](docs/architecture.md)。
+
+## 快速开始
 
 ```bash
-pip install -r requirements.txt
+pip install -r requirements-dev.txt
+
+# 无 Key：生成隔离合成夹具并跑确定性的基线/上界
+python scripts/r5_seed_synthetic_data.py --output-dir .tmp/r5-synthetic
+python -m eval.r5_router_planner_eval --split dev --candidate keyword_router --data-dir .tmp/r5-synthetic
+python -m eval.r5_router_planner_eval --split dev --candidate oracle        --data-dir .tmp/r5-synthetic
+python -m pytest -q
 ```
 
-### 2. 配置环境变量
-
-复制 `.env.example` 为 `.env`，至少补齐下面几项：
-
-- `OPENAI_API_KEY`
-- `OPENAI_BASE_URL`
-- `OPENAI_MODEL`
-- `ECOMMERCE_DB_PATH`
-- `LOGISTICS_PROVIDER_MODE`
-- `KUAIDI100_CUSTOMER`
-- `KUAIDI100_KEY`
-
-说明：
-
-- `ECOMMERCE_DB_PATH` 指向本地 sqlite 数据库，ORDER 和 AFTERSALES 工具会读取这里的订单/售后数据。
-- `LOGISTICS_PROVIDER_MODE=auto` 时，有快递100配置就走真实 API，没有就回退 mock。
-- `LOGISTICS_PROVIDER_MODE=kuaidi100` 时，强制走真实快递100。
-
-### 3. 启动界面
+真实模型运行需要 `.env` 中的 `OPENAI_API_KEY` / `OPENAI_BASE_URL` / `OPENAI_MODEL`：
 
 ```bash
-streamlit run app/streamlit_app.py
+python -m eval.r5_router_planner_eval --split dev --candidate real
 ```
 
-## 本地评测（Eval）
+完整命令见 [`docs/quickstart.md`](docs/quickstart.md)。
 
-评测入口为 `eval/run_eval.py`，会输出：
+## 仓库结构
 
-- `reports/agent_v3_eval.json`
-- `reports/agent_v3_eval.md`
+- `agent/`：Router/Planner、计划契约与参数绑定、A2A 运行时、五领域 repository/工具、安全写与确认令牌、Trace/存储。
+- `eval/`：统一评测入口 `r5_router_planner_eval.py`、真实执行链 `r5_plan_executor.py`、真实模型 provider、数据集与 harness。
+- `scripts/`：合成夹具、数据集构建、敏感扫描。
+- `tests/`：当前主线的单元与集成测试。
+- `docs/`：架构、运行说明、结果与冻结证据。
 
-推荐用脚本一键运行（PowerShell）：
+## 边界
 
-```powershell
-.\scripts\run_eval.ps1 -DbPath .\ecommerce.db -LogisticsMode stub -RunInspect
-```
-
-或直接运行（PowerShell）：
-
-```powershell
-$env:ECOMMERCE_DB_PATH="D:\Myproject\LLMproject1\ecommerce.db"
-$env:AGENT_EVAL_LOGISTICS_MODE="stub"  # stub|real，默认 stub
-python .\eval\run_eval.py
-python .\eval\inspect.py
-```
-
-说明：
-
-- `AGENT_EVAL_LOGISTICS_MODE=stub` 默认走稳定的物流 stub，保证评测可复现；`real` 仅作为 smoke，可选。
-- 评测 case 已对齐当前订单范围（`20260320001~20260320020`），并重点覆盖“物流感知的售后子图”链路与业务结果。
-
-## 本地 SQL 数据应长什么样（不包含真实数据）
-
-本项目默认从 sqlite 读取订单与售后数据（由你本地提供，不建议上传到 GitHub）。
-最小建议表结构如下（字段名以工具层读取为准）：
-
-- `orders`
-  - 必需：`order_id`、`phone_last4`、`product_name`、`amount`、`order_status`、`pay_status`、`created_at`、`can_apply_aftersales`
-  - 可选（用于物流/售后链路）：`carrier_code`、`tracking_no`
-
-- `aftersales_tickets`
-  - 必需：`ticket_id`、`order_id`、`phone_last4`、`service_type`、`reason`、`ticket_status`、`created_at`、`updated_at`
-
-你可以用自己的 seed 脚本初始化这些表，或直接导入已有业务数据，只要满足字段即可。
-
-## 物流接入说明
-
-- 订单主数据仍来自本地订单工具，不由快递100替代。
-- 物流实时事实只在售后子图内部按需查询。
-- 查询顺序为：
-  `order_profile_lookup -> logistics_need_check -> logistics_slot_check -> logistics_snapshot_lookup`
-- `logistics_snapshot` 是运行时消费的标准化结构。
-- 本地 cache 只用于缓存、调试和限频保护，不作为主业务状态源。
-
-## 测试
-
-运行全部测试：
-
-```bash
-python -m unittest discover -s tests -v
-```
-
-重点测试覆盖：
-
-- cache hit / miss
-- 快递100签名与请求格式
-- 物流错误结构化输出
-- verifier 对物流错误码的收口
-- 售后子图创建、查询、人工转接和恢复分支
-
-## 下一步规划：Redis 等后端持续性服务
-
-当前运行态主要依赖内存 checkpointer 与本地文件 cache，适合本地开发与评测。下一步如果要上更“持续”的后端服务，建议方向：
-
-- **Redis 会话/状态存储**：把线程状态、对话上下文、关键 `trace_tags` 持久化，支持多实例与重启恢复。
-- **Redis 缓存层**：将物流快照 cache、RAG 召回缓存等统一纳入 Redis，增强可观测与统一失效策略。
-- **服务化拆分**：将订单/售后/物流 provider 抽象为独立服务或适配器层，便于接入真实 API 与权限控制。
-- **CI/CD 与配置管理**：环境变量、密钥与配置按环境分层（dev/staging/prod），避免配置漂移。
+- 数据为**项目自建合成样本**，非外部客户流量；来源分层（订单本地只读投影、物流订单派生快照、商品/售后自建、政策确定性夹具）。
+- 写操作评测停在"等待用户确认"；"确认后提交完成"未测量。
+- 未实现 replan，不主张动态规划增益。
+- 任务完成率不评估最终回答文案质量。
+- 不声明生产可用性或外部泛化。

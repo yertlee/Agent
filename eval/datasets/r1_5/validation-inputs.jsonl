@@ -1,0 +1,88 @@
+{"case_id": "r15-validation-order_query-01-v1", "family_id": "validation-ORDER_QUERY-01", "split": "validation", "text": "想确认一件事，这笔购买记录目前处于哪一步 ORDR001001，验证 4101"}
+{"case_id": "r15-validation-order_query-01-v2", "family_id": "validation-ORDER_QUERY-01", "split": "validation", "text": "客服你好，这笔购买记录目前处于哪一步 ORDR001001，验证 4101"}
+{"case_id": "r15-validation-order_query-02-v1", "family_id": "validation-ORDER_QUERY-02", "split": "validation", "text": "想确认一件事，不要看快递，我只核实交易单 ORDR001002，4102"}
+{"case_id": "r15-validation-order_query-02-v2", "family_id": "validation-ORDER_QUERY-02", "split": "validation", "text": "客服你好，不要看快递，我只核实交易单 ORDR001002，4102"}
+{"case_id": "r15-validation-order_query-03-v1", "family_id": "validation-ORDER_QUERY-03", "split": "validation", "text": "想确认一件事，订单页是什么状态 ORDR001003 / 4103"}
+{"case_id": "r15-validation-order_query-03-v2", "family_id": "validation-ORDER_QUERY-03", "split": "validation", "text": "客服你好，订单页是什么状态 ORDR001003 / 4103"}
+{"case_id": "r15-validation-order_query-04-v1", "family_id": "validation-ORDER_QUERY-04", "split": "validation", "text": "想确认一件事，could you retrieve purchase ORDR001004, ending 4104"}
+{"case_id": "r15-validation-order_query-04-v2", "family_id": "validation-ORDER_QUERY-04", "split": "validation", "text": "客服你好，could you retrieve purchase ORDR001004, ending 4104"}
+{"case_id": "r15-validation-logistics_query-01-v1", "family_id": "validation-LOGISTICS_QUERY-01", "split": "validation", "text": "想确认一件事，快件 TRKX0001005 走到哪一站了，jd，尾号 4105"}
+{"case_id": "r15-validation-logistics_query-01-v2", "family_id": "validation-LOGISTICS_QUERY-01", "split": "validation", "text": "客服你好，快件 TRKX0001005 走到哪一站了，jd，尾号 4105"}
+{"case_id": "r15-validation-logistics_query-02-v1", "family_id": "validation-LOGISTICS_QUERY-02", "split": "validation", "text": "想确认一件事，我只想追踪包裹 yto/TRKX0001006/4106"}
+{"case_id": "r15-validation-logistics_query-02-v2", "family_id": "validation-LOGISTICS_QUERY-02", "split": "validation", "text": "客服你好，我只想追踪包裹 yto/TRKX0001006/4106"}
+{"case_id": "r15-validation-logistics_query-03-v1", "family_id": "validation-LOGISTICS_QUERY-03", "split": "validation", "text": "想确认一件事，运输单 TRKX0001007 有没有签收，承运方 zto，4107"}
+{"case_id": "r15-validation-logistics_query-03-v2", "family_id": "validation-LOGISTICS_QUERY-03", "split": "validation", "text": "客服你好，运输单 TRKX0001007 有没有签收，承运方 zto，4107"}
+{"case_id": "r15-validation-logistics_query-04-v1", "family_id": "validation-LOGISTICS_QUERY-04", "split": "validation", "text": "想确认一件事，track parcel TRKX0001008 via sf, verification 4108"}
+{"case_id": "r15-validation-logistics_query-04-v2", "family_id": "validation-LOGISTICS_QUERY-04", "split": "validation", "text": "客服你好，track parcel TRKX0001008 via sf, verification 4108"}
+{"case_id": "r15-validation-order_and_logistics-01-v1", "family_id": "validation-ORDER_AND_LOGISTICS-01", "split": "validation", "text": "想确认一件事，核验交易 ORDR001009 后继续看关联包裹，尾号 4109"}
+{"case_id": "r15-validation-order_and_logistics-01-v2", "family_id": "validation-ORDER_AND_LOGISTICS-01", "split": "validation", "text": "客服你好，核验交易 ORDR001009 后继续看关联包裹，尾号 4109"}
+{"case_id": "r15-validation-order_and_logistics-02-v1", "family_id": "validation-ORDER_AND_LOGISTICS-02", "split": "validation", "text": "想确认一件事，购买状态和寄送状态一起查 ORDR001010 4110"}
+{"case_id": "r15-validation-order_and_logistics-02-v2", "family_id": "validation-ORDER_AND_LOGISTICS-02", "split": "validation", "text": "客服你好，购买状态和寄送状态一起查 ORDR001010 4110"}
+{"case_id": "r15-validation-order_and_logistics-03-v1", "family_id": "validation-ORDER_AND_LOGISTICS-03", "split": "validation", "text": "想确认一件事，从订单 ORDR001011 找出运单并追踪，4111"}
+{"case_id": "r15-validation-order_and_logistics-03-v2", "family_id": "validation-ORDER_AND_LOGISTICS-03", "split": "validation", "text": "客服你好，从订单 ORDR001011 找出运单并追踪，4111"}
+{"case_id": "r15-validation-order_and_logistics-04-v1", "family_id": "validation-ORDER_AND_LOGISTICS-04", "split": "validation", "text": "想确认一件事，retrieve order ORDR001012 then follow its delivery, 4112"}
+{"case_id": "r15-validation-order_and_logistics-04-v2", "family_id": "validation-ORDER_AND_LOGISTICS-04", "split": "validation", "text": "客服你好，retrieve order ORDR001012 then follow its delivery, 4112"}
+{"case_id": "r15-validation-aftersales_create-01-v1", "family_id": "validation-AFTERSALES_CREATE-01", "split": "validation", "text": "想确认一件事，为 ORDR001013 建立换货请求，尾号 4113"}
+{"case_id": "r15-validation-aftersales_create-01-v2", "family_id": "validation-AFTERSALES_CREATE-01", "split": "validation", "text": "客服你好，为 ORDR001013 建立换货请求，尾号 4113"}
+{"case_id": "r15-validation-aftersales_create-02-v1", "family_id": "validation-AFTERSALES_CREATE-02", "split": "validation", "text": "想确认一件事，收到坏件了，请提交退货 ORDR001014 4114"}
+{"case_id": "r15-validation-aftersales_create-02-v2", "family_id": "validation-AFTERSALES_CREATE-02", "split": "validation", "text": "客服你好，收到坏件了，请提交退货 ORDR001014 4114"}
+{"case_id": "r15-validation-aftersales_create-03-v1", "family_id": "validation-AFTERSALES_CREATE-03", "split": "validation", "text": "想确认一件事，我决定取消购买并申请退款 ORDR001015/4115"}
+{"case_id": "r15-validation-aftersales_create-03-v2", "family_id": "validation-AFTERSALES_CREATE-03", "split": "validation", "text": "客服你好，我决定取消购买并申请退款 ORDR001015/4115"}
+{"case_id": "r15-validation-aftersales_create-04-v1", "family_id": "validation-AFTERSALES_CREATE-04", "split": "validation", "text": "想确认一件事，open an aftersales request for ORDR001016, 4116"}
+{"case_id": "r15-validation-aftersales_create-04-v2", "family_id": "validation-AFTERSALES_CREATE-04", "split": "validation", "text": "客服你好，open an aftersales request for ORDR001016, 4116"}
+{"case_id": "r15-validation-aftersales_status-01-v1", "family_id": "validation-AFTERSALES_STATUS-01", "split": "validation", "text": "想确认一件事，服务请求 AS-X001017 有进展吗"}
+{"case_id": "r15-validation-aftersales_status-01-v2", "family_id": "validation-AFTERSALES_STATUS-01", "split": "validation", "text": "客服你好，服务请求 AS-X001017 有进展吗"}
+{"case_id": "r15-validation-aftersales_status-02-v1", "family_id": "validation-AFTERSALES_STATUS-02", "split": "validation", "text": "想确认一件事，我之前的退款工单 AS-X001018 到哪一步"}
+{"case_id": "r15-validation-aftersales_status-02-v2", "family_id": "validation-AFTERSALES_STATUS-02", "split": "validation", "text": "客服你好，我之前的退款工单 AS-X001018 到哪一步"}
+{"case_id": "r15-validation-aftersales_status-03-v1", "family_id": "validation-AFTERSALES_STATUS-03", "split": "validation", "text": "想确认一件事，只看已有退货申请 AS-X001019"}
+{"case_id": "r15-validation-aftersales_status-03-v2", "family_id": "validation-AFTERSALES_STATUS-03", "split": "validation", "text": "客服你好，只看已有退货申请 AS-X001019"}
+{"case_id": "r15-validation-aftersales_status-04-v1", "family_id": "validation-AFTERSALES_STATUS-04", "split": "validation", "text": "想确认一件事，check service ticket AS-X001020"}
+{"case_id": "r15-validation-aftersales_status-04-v2", "family_id": "validation-AFTERSALES_STATUS-04", "split": "validation", "text": "客服你好，check service ticket AS-X001020"}
+{"case_id": "r15-validation-policy_qa-01-v1", "family_id": "validation-POLICY_QA-01", "split": "validation", "text": "想确认一件事，哪些品类不能无理由退"}
+{"case_id": "r15-validation-policy_qa-01-v2", "family_id": "validation-POLICY_QA-01", "split": "validation", "text": "客服你好，哪些品类不能无理由退"}
+{"case_id": "r15-validation-policy_qa-02-v1", "family_id": "validation-POLICY_QA-02", "split": "validation", "text": "想确认一件事，运费由谁承担"}
+{"case_id": "r15-validation-policy_qa-02-v2", "family_id": "validation-POLICY_QA-02", "split": "validation", "text": "客服你好，运费由谁承担"}
+{"case_id": "r15-validation-policy_qa-03-v1", "family_id": "validation-POLICY_QA-03", "split": "validation", "text": "想确认一件事，价保规则是什么"}
+{"case_id": "r15-validation-policy_qa-03-v2", "family_id": "validation-POLICY_QA-03", "split": "validation", "text": "客服你好，价保规则是什么"}
+{"case_id": "r15-validation-policy_qa-04-v1", "family_id": "validation-POLICY_QA-04", "split": "validation", "text": "想确认一件事，explain the refund rules"}
+{"case_id": "r15-validation-policy_qa-04-v2", "family_id": "validation-POLICY_QA-04", "split": "validation", "text": "客服你好，explain the refund rules"}
+{"case_id": "r15-validation-product_qa-01-v1", "family_id": "validation-PRODUCT_QA-01", "split": "validation", "text": "想确认一件事，型号 SKU-X01025 的重量是多少"}
+{"case_id": "r15-validation-product_qa-01-v2", "family_id": "validation-PRODUCT_QA-01", "split": "validation", "text": "客服你好，型号 SKU-X01025 的重量是多少"}
+{"case_id": "r15-validation-product_qa-02-v1", "family_id": "validation-PRODUCT_QA-02", "split": "validation", "text": "想确认一件事，介绍一下 SKU-X01026 的材质"}
+{"case_id": "r15-validation-product_qa-02-v2", "family_id": "validation-PRODUCT_QA-02", "split": "validation", "text": "客服你好，介绍一下 SKU-X01026 的材质"}
+{"case_id": "r15-validation-product_qa-03-v1", "family_id": "validation-PRODUCT_QA-03", "split": "validation", "text": "想确认一件事，SKU-X01027 能不能连接蓝牙"}
+{"case_id": "r15-validation-product_qa-03-v2", "family_id": "validation-PRODUCT_QA-03", "split": "validation", "text": "客服你好，SKU-X01027 能不能连接蓝牙"}
+{"case_id": "r15-validation-product_qa-04-v1", "family_id": "validation-PRODUCT_QA-04", "split": "validation", "text": "想确认一件事，show product details for SKU-X01028"}
+{"case_id": "r15-validation-product_qa-04-v2", "family_id": "validation-PRODUCT_QA-04", "split": "validation", "text": "客服你好，show product details for SKU-X01028"}
+{"case_id": "r15-validation-complaint-01-v1", "family_id": "validation-COMPLAINT-01", "split": "validation", "text": "想确认一件事，我要反馈商家服务问题"}
+{"case_id": "r15-validation-complaint-01-v2", "family_id": "validation-COMPLAINT-01", "split": "validation", "text": "客服你好，我要反馈商家服务问题"}
+{"case_id": "r15-validation-complaint-02-v1", "family_id": "validation-COMPLAINT-02", "split": "validation", "text": "想确认一件事，这次配送体验太差了"}
+{"case_id": "r15-validation-complaint-02-v2", "family_id": "validation-COMPLAINT-02", "split": "validation", "text": "客服你好，这次配送体验太差了"}
+{"case_id": "r15-validation-complaint-03-v1", "family_id": "validation-COMPLAINT-03", "split": "validation", "text": "想确认一件事，请转人工受理我的投诉"}
+{"case_id": "r15-validation-complaint-03-v2", "family_id": "validation-COMPLAINT-03", "split": "validation", "text": "客服你好，请转人工受理我的投诉"}
+{"case_id": "r15-validation-complaint-04-v1", "family_id": "validation-COMPLAINT-04", "split": "validation", "text": "想确认一件事，I need to report poor service"}
+{"case_id": "r15-validation-complaint-04-v2", "family_id": "validation-COMPLAINT-04", "split": "validation", "text": "客服你好，I need to report poor service"}
+{"case_id": "r15-validation-chitchat-01-v1", "family_id": "validation-CHITCHAT-01", "split": "validation", "text": "想确认一件事，早上好"}
+{"case_id": "r15-validation-chitchat-01-v2", "family_id": "validation-CHITCHAT-01", "split": "validation", "text": "客服你好，早上好"}
+{"case_id": "r15-validation-chitchat-02-v1", "family_id": "validation-CHITCHAT-02", "split": "validation", "text": "想确认一件事，辛苦了"}
+{"case_id": "r15-validation-chitchat-02-v2", "family_id": "validation-CHITCHAT-02", "split": "validation", "text": "客服你好，辛苦了"}
+{"case_id": "r15-validation-chitchat-03-v1", "family_id": "validation-CHITCHAT-03", "split": "validation", "text": "想确认一件事，陪我聊两句"}
+{"case_id": "r15-validation-chitchat-03-v2", "family_id": "validation-CHITCHAT-03", "split": "validation", "text": "客服你好，陪我聊两句"}
+{"case_id": "r15-validation-chitchat-04-v1", "family_id": "validation-CHITCHAT-04", "split": "validation", "text": "想确认一件事，good afternoon"}
+{"case_id": "r15-validation-chitchat-04-v2", "family_id": "validation-CHITCHAT-04", "split": "validation", "text": "客服你好，good afternoon"}
+{"case_id": "r15-validation-unknown-01-v1", "family_id": "validation-UNKNOWN-01", "split": "validation", "text": "想确认一件事，替我预约驾照考试"}
+{"case_id": "r15-validation-unknown-01-v2", "family_id": "validation-UNKNOWN-01", "split": "validation", "text": "客服你好，替我预约驾照考试"}
+{"case_id": "r15-validation-unknown-02-v1", "family_id": "validation-UNKNOWN-02", "split": "validation", "text": "想确认一件事，分析这份医学报告"}
+{"case_id": "r15-validation-unknown-02-v2", "family_id": "validation-UNKNOWN-02", "split": "validation", "text": "客服你好，分析这份医学报告"}
+{"case_id": "r15-validation-unknown-03-v1", "family_id": "validation-UNKNOWN-03", "split": "validation", "text": "想确认一件事，打开我的邮箱"}
+{"case_id": "r15-validation-unknown-03-v2", "family_id": "validation-UNKNOWN-03", "split": "validation", "text": "客服你好，打开我的邮箱"}
+{"case_id": "r15-validation-unknown-04-v1", "family_id": "validation-UNKNOWN-04", "split": "validation", "text": "想确认一件事，convert dollars to yen"}
+{"case_id": "r15-validation-unknown-04-v2", "family_id": "validation-UNKNOWN-04", "split": "validation", "text": "客服你好，convert dollars to yen"}
+{"case_id": "r15-validation-multi_intent-01-v1", "family_id": "validation-MULTI_INTENT-01", "split": "validation", "text": "想确认一件事，核对订单 ORDR001041，并说明退款时效，尾号 4141"}
+{"case_id": "r15-validation-multi_intent-01-v2", "family_id": "validation-MULTI_INTENT-01", "split": "validation", "text": "客服你好，核对订单 ORDR001041，并说明退款时效，尾号 4141"}
+{"case_id": "r15-validation-multi_intent-02-v1", "family_id": "validation-MULTI_INTENT-02", "split": "validation", "text": "想确认一件事，查购买记录 ORDR001042，另外问下运费退不退，4142"}
+{"case_id": "r15-validation-multi_intent-02-v2", "family_id": "validation-MULTI_INTENT-02", "split": "validation", "text": "客服你好，查购买记录 ORDR001042，另外问下运费退不退，4142"}
+{"case_id": "r15-validation-multi_intent-03-v1", "family_id": "validation-MULTI_INTENT-03", "split": "validation", "text": "想确认一件事，retrieve ORDR001043 and explain exchange rules, 4143"}
+{"case_id": "r15-validation-multi_intent-03-v2", "family_id": "validation-MULTI_INTENT-03", "split": "validation", "text": "客服你好，retrieve ORDR001043 and explain exchange rules, 4143"}
+{"case_id": "r15-validation-multi_intent-04-v1", "family_id": "validation-MULTI_INTENT-04", "split": "validation", "text": "想确认一件事，订单 ORDR001044 什么状态？商品拆封后还能退吗，4144"}
+{"case_id": "r15-validation-multi_intent-04-v2", "family_id": "validation-MULTI_INTENT-04", "split": "validation", "text": "客服你好，订单 ORDR001044 什么状态？商品拆封后还能退吗，4144"}

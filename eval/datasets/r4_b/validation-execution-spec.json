@@ -1,0 +1,206 @@
+{
+  "schema_version": "r4-b.execution-spec.v1",
+  "split": "validation",
+  "freeze_manifest_sha256": "77792efdae292293609611f99e367f53a33c5330bed36b08c564f1056705b529",
+  "annotation_provenance": "primary-heldout-annotation.v1",
+  "cases": [
+    {
+      "case_id": "validation-normal-01",
+      "topology": "order_only"
+    },
+    {
+      "case_id": "validation-normal-02",
+      "topology": "order_only"
+    },
+    {
+      "case_id": "validation-normal-03",
+      "topology": "logistics_only"
+    },
+    {
+      "case_id": "validation-normal-04",
+      "topology": "logistics_only"
+    },
+    {
+      "case_id": "validation-normal-05",
+      "topology": "policy_only"
+    },
+    {
+      "case_id": "validation-normal-06",
+      "topology": "policy_only"
+    },
+    {
+      "case_id": "validation-normal-07",
+      "topology": "order->logistics",
+      "dependencies": [
+        [
+          "order",
+          "logistics"
+        ]
+      ]
+    },
+    {
+      "case_id": "validation-normal-08",
+      "topology": "order->logistics",
+      "dependencies": [
+        [
+          "order",
+          "logistics"
+        ]
+      ]
+    },
+    {
+      "case_id": "validation-normal-09",
+      "topology": "order+policy"
+    },
+    {
+      "case_id": "validation-normal-10",
+      "topology": "order+policy"
+    },
+    {
+      "case_id": "validation-normal-11",
+      "topology": "order->logistics+policy",
+      "dependencies": [
+        [
+          "order",
+          "logistics"
+        ]
+      ]
+    },
+    {
+      "case_id": "validation-normal-12",
+      "topology": "order->logistics+policy",
+      "dependencies": [
+        [
+          "order",
+          "logistics"
+        ]
+      ]
+    },
+    {
+      "case_id": "validation-fault-01",
+      "topology": "order_only",
+      "action": "replay_same_request"
+    },
+    {
+      "case_id": "validation-fault-02",
+      "topology": "order_only",
+      "action": "replay_same_request"
+    },
+    {
+      "case_id": "validation-fault-03",
+      "topology": "order->logistics",
+      "action": "dispatch_dependent_first",
+      "dependencies": [
+        [
+          "order",
+          "logistics"
+        ]
+      ]
+    },
+    {
+      "case_id": "validation-fault-04",
+      "topology": "order->logistics",
+      "action": "inject_recoverable_fault",
+      "dependencies": [
+        [
+          "order",
+          "logistics"
+        ]
+      ],
+      "failure_script": {
+        "order": {
+          "kind": "TIMEOUT",
+          "count": 1
+        }
+      }
+    },
+    {
+      "case_id": "validation-fault-05",
+      "topology": "order->logistics",
+      "action": "inject_recoverable_fault",
+      "dependencies": [
+        [
+          "order",
+          "logistics"
+        ]
+      ],
+      "failure_script": {
+        "order": {
+          "kind": "TIMEOUT",
+          "count": 1
+        }
+      }
+    },
+    {
+      "case_id": "validation-fault-06",
+      "topology": "order->logistics",
+      "action": "inject_recoverable_fault",
+      "dependencies": [
+        [
+          "order",
+          "logistics"
+        ]
+      ],
+      "failure_script": {
+        "order": {
+          "kind": "LOST",
+          "count": 1
+        }
+      }
+    },
+    {
+      "case_id": "validation-fault-07",
+      "topology": "order_only",
+      "action": "inject_non_retryable_fault",
+      "failure_script": {
+        "order": {
+          "kind": "NON_RETRYABLE",
+          "count": 1
+        }
+      }
+    },
+    {
+      "case_id": "validation-fault-08",
+      "topology": "order_only",
+      "action": "freeze_before_replay"
+    },
+    {
+      "case_id": "validation-fault-09",
+      "topology": "order_only",
+      "action": "mutate_message_schema"
+    },
+    {
+      "case_id": "validation-fault-10",
+      "topology": "order_only",
+      "action": "inject_semantic_mismatch",
+      "failure_script": {
+        "order": {
+          "kind": "SEMANTIC_WRONG",
+          "count": 1
+        }
+      }
+    },
+    {
+      "case_id": "validation-fault-11",
+      "topology": "order_only",
+      "action": "inject_semantic_mismatch",
+      "failure_script": {
+        "order": {
+          "kind": "SEMANTIC_WRONG",
+          "count": 1
+        }
+      }
+    },
+    {
+      "case_id": "validation-fault-12",
+      "topology": "order+policy",
+      "action": "preserve_independent_branch",
+      "failure_script": {
+        "order": {
+          "kind": "SEMANTIC_WRONG",
+          "count": 1
+        }
+      }
+    }
+  ]
+}

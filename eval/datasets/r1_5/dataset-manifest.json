@@ -1,0 +1,23 @@
+{
+  "schema_version": "r1.5.dataset.v1",
+  "splits": {
+    "dev": {
+      "unique_case_N": 176,
+      "family_N": 88,
+      "input_sha256": "9f43a686a2c5e81830768382945a853902ca65e25559f39cfe23cdda3203e5fb",
+      "gold_sha256": "ddd4ff38428f9cd89fe70783425b7465724dadff78832636ed6a156150e24669"
+    },
+    "validation": {
+      "unique_case_N": 88,
+      "family_N": 44,
+      "input_sha256": "80e70f8dbf6a18794fd081c1ec103943aef16070077adcc508d1e1e1effd4119",
+      "gold_sha256": "3775728c530a2831370b4149cbb0fbe93b9dd0354a5d82a3bd7fea715b586b84"
+    },
+    "mutation": {
+      "unique_case_N": 18,
+      "family_N": 17,
+      "input_sha256": "4e7c5eaea36d1c89f664bf73fb967d5f3bab2427eb059d3a806a85a222fede3c",
+      "gold_sha256": "ca8cd5199de05bec8aad9d534fa7982c293048a12383d4f86476530f65148bf3"
+    }
+  }
+}

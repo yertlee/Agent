@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "dev-order-live-v1.schema.json",
+  "type": "object",
+  "required": ["manifest_version", "dataset_version", "split", "heldout", "data_source", "model_repetitions", "fault_repetitions", "cases"],
+  "properties": {
+    "manifest_version": {"const": "dev-order-live-v1"},
+    "dataset_version": {"const": "r1.dev-order-live.v1"},
+    "split": {"const": "dev"},
+    "heldout": {"const": false},
+    "data_source": {"type": "object", "required": ["kind", "path", "required_for_success_cases"], "properties": {"kind": {"const": "sqlite"}, "path": {"const": "ecommerce.db"}, "required_for_success_cases": {"const": true}, "business_rows_embedded": {"const": false}}, "additionalProperties": false},
+    "model_repetitions": {"const": 3},
+    "fault_repetitions": {"const": 1},
+    "cases": {"type": "array", "minItems": 24, "maxItems": 24, "items": {"type": "object", "required": ["case_id", "category", "input_ref", "expected_intent", "expected_tool_path", "expected_status"], "properties": {"case_id": {"type": "string"}, "category": {"enum": ["valid_order", "missing_entity", "nonexistent_order", "unauthorized_order", "model_fault", "database_fault"]}, "input_ref": {"type": "string"}, "expected_intent": {"type": ["string", "null"]}, "expected_tool_path": {"type": "array", "items": {"type": "string"}}, "expected_code": {"type": "string"}, "expected_status": {"enum": ["SUCCEEDED", "NEEDS_CLARIFICATION", "FAILED"]}}, "additionalProperties": false}}
+  },
+  "additionalProperties": false
+}

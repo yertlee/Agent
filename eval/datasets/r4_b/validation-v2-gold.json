@@ -1,0 +1,426 @@
+{
+  "schema_version": "r4-b.gold.v1",
+  "split": "validation-v2",
+  "annotation_provenance": "primary-heldout-v2-annotation.v1",
+  "cases": [
+    {
+      "case_id": "validation-v2-normal-01",
+      "topology": "order_only",
+      "requested_capabilities": [
+        "order/read@v1"
+      ],
+      "expected_agents": [
+        "order-agent@v1"
+      ],
+      "dependency_edges": [],
+      "entity_binding": {
+        "order_id": "Q2-ORDER-3301",
+        "phone_last4": "3301"
+      },
+      "needs_clarification": false,
+      "status": "SUCCEEDED",
+      "physical_attempts": 1,
+      "trace_complete": true,
+      "late_canonical_mutation": false,
+      "normal_e2e_success": true,
+      "protocol_safe_success": true
+    },
+    {
+      "case_id": "validation-v2-normal-02",
+      "topology": "order_only",
+      "requested_capabilities": [
+        "order/read@v1"
+      ],
+      "expected_agents": [
+        "order-agent@v1"
+      ],
+      "dependency_edges": [],
+      "entity_binding": {
+        "order_id": "Q2-ORDER-3302"
+      },
+      "needs_clarification": true,
+      "status": "SUCCEEDED",
+      "physical_attempts": 1,
+      "trace_complete": true,
+      "late_canonical_mutation": false,
+      "normal_e2e_success": true,
+      "protocol_safe_success": true
+    },
+    {
+      "case_id": "validation-v2-normal-03",
+      "topology": "logistics_only",
+      "requested_capabilities": [
+        "logistics/read@v1"
+      ],
+      "expected_agents": [
+        "logistics-agent@v1"
+      ],
+      "dependency_edges": [],
+      "entity_binding": {
+        "carrier_code": "qingniao-3303",
+        "tracking_no": "Q2-PARCEL-3303"
+      },
+      "needs_clarification": false,
+      "status": "SUCCEEDED",
+      "physical_attempts": 1,
+      "trace_complete": true,
+      "late_canonical_mutation": false,
+      "normal_e2e_success": true,
+      "protocol_safe_success": true
+    },
+    {
+      "case_id": "validation-v2-normal-04",
+      "topology": "logistics_only",
+      "requested_capabilities": [
+        "logistics/read@v1"
+      ],
+      "expected_agents": [
+        "logistics-agent@v1"
+      ],
+      "dependency_edges": [],
+      "entity_binding": {
+        "carrier_code": "qingniao-3304"
+      },
+      "needs_clarification": true,
+      "status": "SUCCEEDED",
+      "physical_attempts": 1,
+      "trace_complete": true,
+      "late_canonical_mutation": false,
+      "normal_e2e_success": true,
+      "protocol_safe_success": true
+    },
+    {
+      "case_id": "validation-v2-normal-05",
+      "topology": "policy_only",
+      "requested_capabilities": [
+        "policy/read@v1"
+      ],
+      "expected_agents": [
+        "policy-agent@v1"
+      ],
+      "dependency_edges": [],
+      "entity_binding": {
+        "policy_query": "网购商品申请换货需要符合哪些规则？"
+      },
+      "needs_clarification": false,
+      "status": "SUCCEEDED",
+      "physical_attempts": 1,
+      "trace_complete": true,
+      "late_canonical_mutation": false,
+      "normal_e2e_success": true,
+      "protocol_safe_success": true
+    },
+    {
+      "case_id": "validation-v2-normal-06",
+      "topology": "policy_only",
+      "requested_capabilities": [
+        "policy/read@v1"
+      ],
+      "expected_agents": [
+        "policy-agent@v1"
+      ],
+      "dependency_edges": [],
+      "entity_binding": {
+        "policy_query": "退货申请完成以后，退款一般多长时间能到账？"
+      },
+      "needs_clarification": false,
+      "status": "SUCCEEDED",
+      "physical_attempts": 1,
+      "trace_complete": true,
+      "late_canonical_mutation": false,
+      "normal_e2e_success": true,
+      "protocol_safe_success": true
+    },
+    {
+      "case_id": "validation-v2-normal-07",
+      "topology": "order->logistics",
+      "requested_capabilities": [
+        "order/read@v1",
+        "logistics/read@v1"
+      ],
+      "expected_agents": [
+        "order-agent@v1",
+        "logistics-agent@v1"
+      ],
+      "dependency_edges": [
+        [
+          "order",
+          "logistics"
+        ]
+      ],
+      "entity_binding": {
+        "order_id": "Q2-ORDER-3307",
+        "phone_last4": "3307"
+      },
+      "needs_clarification": false,
+      "status": "SUCCEEDED",
+      "physical_attempts": 2,
+      "trace_complete": true,
+      "late_canonical_mutation": false,
+      "normal_e2e_success": true,
+      "protocol_safe_success": true
+    },
+    {
+      "case_id": "validation-v2-normal-08",
+      "topology": "order->logistics",
+      "requested_capabilities": [
+        "order/read@v1",
+        "logistics/read@v1"
+      ],
+      "expected_agents": [
+        "order-agent@v1",
+        "logistics-agent@v1"
+      ],
+      "dependency_edges": [
+        [
+          "order",
+          "logistics"
+        ]
+      ],
+      "entity_binding": {
+        "phone_last4": "3308"
+      },
+      "needs_clarification": true,
+      "status": "SUCCEEDED",
+      "physical_attempts": 2,
+      "trace_complete": true,
+      "late_canonical_mutation": false,
+      "normal_e2e_success": true,
+      "protocol_safe_success": true
+    },
+    {
+      "case_id": "validation-v2-normal-09",
+      "topology": "order+policy",
+      "requested_capabilities": [
+        "order/read@v1",
+        "policy/read@v1"
+      ],
+      "expected_agents": [
+        "order-agent@v1",
+        "policy-agent@v1"
+      ],
+      "dependency_edges": [],
+      "entity_binding": {
+        "order_id": "Q2-ORDER-3309",
+        "phone_last4": "3309",
+        "policy_query": "换货申请有哪些限制。"
+      },
+      "needs_clarification": false,
+      "status": "SUCCEEDED",
+      "physical_attempts": 2,
+      "trace_complete": true,
+      "late_canonical_mutation": false,
+      "normal_e2e_success": true,
+      "protocol_safe_success": true
+    },
+    {
+      "case_id": "validation-v2-normal-10",
+      "topology": "order+policy",
+      "requested_capabilities": [
+        "order/read@v1",
+        "policy/read@v1"
+      ],
+      "expected_agents": [
+        "order-agent@v1",
+        "policy-agent@v1"
+      ],
+      "dependency_edges": [],
+      "entity_binding": {
+        "order_id": "Q2-ORDER-3310",
+        "policy_query": "退货申请完成后退款多久到账。"
+      },
+      "needs_clarification": true,
+      "status": "SUCCEEDED",
+      "physical_attempts": 2,
+      "trace_complete": true,
+      "late_canonical_mutation": false,
+      "normal_e2e_success": true,
+      "protocol_safe_success": true
+    },
+    {
+      "case_id": "validation-v2-normal-11",
+      "topology": "order->logistics+policy",
+      "requested_capabilities": [
+        "order/read@v1",
+        "logistics/read@v1",
+        "policy/read@v1"
+      ],
+      "expected_agents": [
+        "order-agent@v1",
+        "logistics-agent@v1",
+        "policy-agent@v1"
+      ],
+      "dependency_edges": [
+        [
+          "order",
+          "logistics"
+        ]
+      ],
+      "entity_binding": {
+        "order_id": "Q2-ORDER-3311",
+        "phone_last4": "3311",
+        "policy_query": "商品换货规则。"
+      },
+      "needs_clarification": false,
+      "status": "SUCCEEDED",
+      "physical_attempts": 3,
+      "trace_complete": true,
+      "late_canonical_mutation": false,
+      "normal_e2e_success": true,
+      "protocol_safe_success": true
+    },
+    {
+      "case_id": "validation-v2-normal-12",
+      "topology": "order->logistics+policy",
+      "requested_capabilities": [
+        "order/read@v1",
+        "logistics/read@v1",
+        "policy/read@v1"
+      ],
+      "expected_agents": [
+        "order-agent@v1",
+        "logistics-agent@v1",
+        "policy-agent@v1"
+      ],
+      "dependency_edges": [
+        [
+          "order",
+          "logistics"
+        ]
+      ],
+      "entity_binding": {
+        "order_id": "Q2-ORDER-3312",
+        "policy_query": "退货后退款通常多久到达。",
+        "phone_last4": "3312"
+      },
+      "needs_clarification": false,
+      "status": "SUCCEEDED",
+      "physical_attempts": 3,
+      "trace_complete": true,
+      "late_canonical_mutation": false,
+      "normal_e2e_success": true,
+      "protocol_safe_success": true
+    },
+    {
+      "case_id": "validation-v2-fault-01",
+      "status": "FAILED",
+      "physical_attempts": 0,
+      "trace_complete": true,
+      "late_canonical_mutation": false,
+      "protocol_safe_success": true,
+      "error_code": "A2A_SCHEMA_VERSION_MISMATCH",
+      "failure_containment": true,
+      "invalid_message_blocking": true
+    },
+    {
+      "case_id": "validation-v2-fault-02",
+      "status": "SUCCEEDED",
+      "physical_attempts": 1,
+      "trace_complete": true,
+      "late_canonical_mutation": false,
+      "protocol_safe_success": true,
+      "duplicate_physical_reexecution": false
+    },
+    {
+      "case_id": "validation-v2-fault-03",
+      "status": "SUCCEEDED",
+      "physical_attempts": 2,
+      "trace_complete": true,
+      "late_canonical_mutation": false,
+      "protocol_safe_success": true,
+      "recoverable_fault_recovery": true
+    },
+    {
+      "case_id": "validation-v2-fault-04",
+      "status": "FAILED",
+      "physical_attempts": 1,
+      "trace_complete": true,
+      "late_canonical_mutation": false,
+      "protocol_safe_success": true,
+      "error_code": "A2A_SEMANTIC_WRONG",
+      "failure_containment": true,
+      "semantic_wrong_rejection": true
+    },
+    {
+      "case_id": "validation-v2-fault-05",
+      "status": "PARTIAL",
+      "physical_attempts": 2,
+      "trace_complete": true,
+      "late_canonical_mutation": false,
+      "protocol_safe_success": true,
+      "error_code": "A2A_SEMANTIC_WRONG",
+      "independent_branch_partial_preservation": true,
+      "branch_status": [
+        "FAILED",
+        "SUCCEEDED"
+      ]
+    },
+    {
+      "case_id": "validation-v2-fault-06",
+      "status": "SUCCEEDED",
+      "physical_attempts": 2,
+      "trace_complete": true,
+      "late_canonical_mutation": false,
+      "protocol_safe_success": true,
+      "recoverable_fault_recovery": true
+    },
+    {
+      "case_id": "validation-v2-fault-07",
+      "status": "LATE",
+      "physical_attempts": 1,
+      "trace_complete": true,
+      "late_canonical_mutation": false,
+      "protocol_safe_success": true,
+      "error_code": "A2A_LATE_MESSAGE",
+      "failure_containment": true
+    },
+    {
+      "case_id": "validation-v2-fault-08",
+      "status": "FAILED",
+      "physical_attempts": 0,
+      "trace_complete": true,
+      "late_canonical_mutation": false,
+      "protocol_safe_success": true,
+      "error_code": "NON_RETRYABLE_FAULT",
+      "failure_containment": true
+    },
+    {
+      "case_id": "validation-v2-fault-09",
+      "status": "SUCCEEDED",
+      "physical_attempts": 2,
+      "trace_complete": true,
+      "late_canonical_mutation": false,
+      "protocol_safe_success": true
+    },
+    {
+      "case_id": "validation-v2-fault-10",
+      "status": "SUCCEEDED",
+      "physical_attempts": 1,
+      "trace_complete": true,
+      "late_canonical_mutation": false,
+      "protocol_safe_success": true,
+      "duplicate_physical_reexecution": false
+    },
+    {
+      "case_id": "validation-v2-fault-11",
+      "status": "SUCCEEDED",
+      "physical_attempts": 2,
+      "trace_complete": true,
+      "late_canonical_mutation": false,
+      "protocol_safe_success": true,
+      "recoverable_fault_recovery": true
+    },
+    {
+      "case_id": "validation-v2-fault-12",
+      "status": "FAILED",
+      "physical_attempts": 1,
+      "trace_complete": true,
+      "late_canonical_mutation": false,
+      "protocol_safe_success": true,
+      "error_code": "A2A_SEMANTIC_WRONG",
+      "failure_containment": true,
+      "semantic_wrong_rejection": true
+    }
+  ],
+  "freeze_manifest_sha256": "7005e1a77144caceb31cfb6ec79cabfe7dced68c489e08703a47dce1c6da9ebb"
+}

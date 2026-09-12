@@ -1,0 +1,9 @@
+{
+  "schema_version": "r2.correction.dataset.v1",
+  "split": "development",
+  "unique_case_N": 24,
+  "dataset_sha256": "2171250244bd0b7883d73567b489a0d0ff7bff5f845a7fe98a212881eaf33bf4",
+  "world_state_source": "explicit_case_fixture",
+  "same_goal_world_groups": 3,
+  "heldout_executed": false
+}

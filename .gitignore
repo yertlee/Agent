@@ -25,3 +25,13 @@ dist/
 .mypy_cache/
 
 .streamlit/secrets.toml
+
+# Local credentials, generated runs, and personal document artifacts.
+.env.*
+!.env.example
+.tmp/
+artifacts/
+*.docx
+*.sqlite
+*.db-wal
+*.db-shm

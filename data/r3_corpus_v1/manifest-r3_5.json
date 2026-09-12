@@ -1,0 +1,227 @@
+{
+  "manifest_version": "r3.manifest.v1",
+  "corpus_version": "r3.demo.corpus.v1",
+  "builder_version": "r3.builder.v1",
+  "tokenizer_version": "unicode-token.v1",
+  "embedding_model": "BAAI/bge-small-zh-v1.5",
+  "reranker_version": "coverage-reranker.v1",
+  "top_k": 5,
+  "candidate_k": 20,
+  "rrf_k": 60,
+  "bm25_min_score": 0.5,
+  "dense_min_score": 0.3,
+  "min_lexical_overlap": 1,
+  "min_query_coverage": 0.3,
+  "manifest_checksum": "60bed1446b7b3095f7cd5c72eab12e70a2f7cb5fadca113c34b365dfdece813e",
+  "sources": [
+    {
+      "source_id": "demo-return-v1",
+      "document_type": "policy",
+      "version": "policy.return.v1",
+      "effective_from": "2024-01-01",
+      "effective_to": "2024-12-31",
+      "scope": "standard-return",
+      "claim_key": "return-window",
+      "path": "docs/return_policy_v1.md",
+      "checksum": "8981d3867427a5fae5d613aa261a2b92ffe47412e38a4ab0c8de71623933c956"
+    },
+    {
+      "source_id": "demo-return-v2",
+      "document_type": "policy",
+      "version": "policy.return.v2",
+      "effective_from": "2025-01-01",
+      "effective_to": null,
+      "scope": "standard-return",
+      "claim_key": "return-window",
+      "path": "docs/return_policy_v2.md",
+      "checksum": "8a482f715f42562ceccda71960ee07d6b5bba4ee828a606a8ec726eaf810235b"
+    },
+    {
+      "source_id": "demo-return-conflict",
+      "document_type": "policy",
+      "version": "policy.return.conflict.v1",
+      "effective_from": "2025-01-01",
+      "effective_to": "2025-12-31",
+      "scope": "standard-return",
+      "claim_key": "return-window",
+      "path": "docs/return_policy_conflict.md",
+      "checksum": "b3ef2ed3b4b490f9a5eb8f26fab9d1a6bafc60bf2616050c0d4db77b79d3bb1d"
+    },
+    {
+      "source_id": "demo-battery-v1",
+      "document_type": "product",
+      "version": "product.battery.v1",
+      "effective_from": "2025-01-01",
+      "effective_to": null,
+      "scope": "battery-warranty",
+      "claim_key": "battery-warranty",
+      "path": "docs/battery_warranty.md",
+      "checksum": "4d3f13351baa12a1bd272acfbeff0ef708bae6f126faa56abc1f49f4396725b5"
+    },
+    {
+      "source_id": "demo-membership-v1",
+      "document_type": "policy",
+      "version": "policy.membership.v1",
+      "effective_from": "2023-01-01",
+      "effective_to": "2023-12-31",
+      "scope": "membership-return",
+      "claim_key": "membership-return-window",
+      "path": "docs/legacy_membership.md",
+      "checksum": "21c5f0488830a41036342d8f34ea152588eb5288229abbfa345f6a2a84c38bdb"
+    },
+    {
+      "source_id": "demo-headphones-v1",
+      "document_type": "product",
+      "version": "product.headphones.v1",
+      "effective_from": "2025-01-01",
+      "effective_to": null,
+      "scope": "headphones-warranty",
+      "claim_key": "headphones-warranty",
+      "path": "docs/headphones_warranty.md",
+      "checksum": "cf7937d15d3b16364cc1122e8b1d66015acff3a54336a1b5cf16cdbb3dd56ccb"
+    },
+    {
+      "source_id": "demo-laptop-repair-v1",
+      "document_type": "product",
+      "version": "product.laptop-repair.v1",
+      "effective_from": "2025-01-01",
+      "effective_to": null,
+      "scope": "laptop-repair",
+      "claim_key": "laptop-repair-response",
+      "path": "docs/laptop_repair_v1.md",
+      "checksum": "c14873b33a83e7131a2c268254db6a980f8f8c3314f1b5dcdfbeefdde736da02"
+    },
+    {
+      "source_id": "demo-exchange-v1",
+      "document_type": "policy",
+      "version": "policy.exchange.v1",
+      "effective_from": "2025-01-01",
+      "effective_to": null,
+      "scope": "exchange",
+      "claim_key": "exchange-condition",
+      "path": "docs/exchange_policy_v1.md",
+      "checksum": "9ff95884ce1bcca6ee8042c085b2ffaba174bc807fa5702f140eac53fbd64106"
+    },
+    {
+      "source_id": "demo-shipping-v1",
+      "document_type": "policy",
+      "version": "policy.shipping.v1",
+      "effective_from": "2025-01-01",
+      "effective_to": null,
+      "scope": "shipping-record",
+      "claim_key": "shipping-fields",
+      "path": "docs/shipping_policy_v1.md",
+      "checksum": "295037676ff032602bf9b105dd264de941c2fb9dd9be368b8c347bc14b57f62b"
+    },
+    {
+      "source_id": "demo-mug-v1",
+      "document_type": "product",
+      "version": "product.mug.v1",
+      "effective_from": "2025-01-01",
+      "effective_to": null,
+      "scope": "mug-material",
+      "claim_key": "mug-material",
+      "path": "docs/mug_product_v1.md",
+      "checksum": "780cd2932b7dc91a31b8f1380059f287478a64548678a79e7189864fead37f24"
+    },
+    {
+      "source_id": "demo-repair-v2",
+      "document_type": "policy",
+      "version": "policy.repair.v2",
+      "effective_from": "2025-01-01",
+      "effective_to": null,
+      "scope": "repair-material",
+      "claim_key": "repair-material",
+      "path": "docs/repair_policy_v2.md",
+      "checksum": "41f80b0bfc112cc85b95ef4e36c8153b4ea209618db37f420d883dc946c25fd1"
+    },
+    {
+      "source_id": "demo-repair-v1",
+      "document_type": "policy",
+      "version": "policy.repair.v1",
+      "effective_from": "2024-01-01",
+      "effective_to": "2024-12-31",
+      "scope": "repair-material",
+      "claim_key": "repair-material",
+      "path": "docs/repair_policy_v1.md",
+      "checksum": "a3088b8b5b7f30a8b04d3007d5d7c013bc0f59bc701e58acf1857e38bc6ab632"
+    }
+  ],
+  "r35_version": "r3.5.runtime.v1",
+  "evidence_threshold": 0.02,
+  "time_strategy": "source-metadata-effective-interval.v1",
+  "abstention_version": "canonical-status.v2",
+  "component_matrix": {
+    "no_retrieval": {
+      "corpus_access": false,
+      "candidate_provider": "none",
+      "metadata_time_filter": false,
+      "abstention": "fixed_refusal",
+      "reranker": null
+    },
+    "random": {
+      "corpus_access": true,
+      "candidate_provider": "seeded_random",
+      "metadata_time_filter": true,
+      "abstention": false,
+      "reranker": null
+    },
+    "bm25": {
+      "corpus_access": true,
+      "candidate_provider": "bm25",
+      "metadata_time_filter": true,
+      "abstention": true,
+      "reranker": null
+    },
+    "dense": {
+      "corpus_access": true,
+      "candidate_provider": "dense",
+      "metadata_time_filter": true,
+      "abstention": true,
+      "reranker": null
+    },
+    "hybrid_no_reranker": {
+      "corpus_access": true,
+      "candidate_provider": "bm25+dense+rrf",
+      "metadata_time_filter": true,
+      "abstention": true,
+      "reranker": null
+    },
+    "hybrid_reranker": {
+      "corpus_access": true,
+      "candidate_provider": "bm25+dense+rrf",
+      "metadata_time_filter": true,
+      "abstention": true,
+      "reranker": "coverage-reranker.v1"
+    },
+    "oracle": {
+      "corpus_access": false,
+      "candidate_provider": "gold",
+      "metadata_time_filter": "gold",
+      "abstention": "gold",
+      "reranker": null
+    },
+    "remove_version_filter": {
+      "corpus_access": true,
+      "candidate_provider": "bm25+dense+rrf",
+      "metadata_time_filter": false,
+      "abstention": true,
+      "reranker": "coverage-reranker.v1"
+    },
+    "remove_abstention": {
+      "corpus_access": true,
+      "candidate_provider": "bm25+dense+rrf",
+      "metadata_time_filter": true,
+      "abstention": false,
+      "reranker": "coverage-reranker.v1"
+    },
+    "mutation": {
+      "corpus_access": true,
+      "candidate_provider": "bm25+dense+rrf",
+      "metadata_time_filter": true,
+      "abstention": true,
+      "reranker": "coverage-reranker.v1"
+    }
+  },
+  "strategy_checksum": "940e867871f54c8440a2062592cdf87752840132d147565bc6e986c7e0a64084"
+}

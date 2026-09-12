@@ -1,0 +1,23 @@
+{
+  "dataset_version": "r3.dataset.v1",
+  "frozen_at": "2026-09-08",
+  "corpus_manifest_sha256": "d3524b84362008e5b449c86549bdb51905b0b8cb46c19bc9c89f62ec75b24a35",
+  "files": {
+    "validation-inputs.jsonl": {
+      "sha256": "e858f4646752a1283b1c7068b30ce32d1f8b48f3f1577fe97bdf92057e087701",
+      "lines": 24
+    },
+    "validation-gold.jsonl": {
+      "sha256": "6af220de67229990b8b59240c15fa28670407e856ffd221bfd7b97c9c2a07204",
+      "lines": 24
+    },
+    "dev-gold.jsonl": {
+      "sha256": "b78a235ffd0ab84dfb42b4d7da02ccc8775b75457083d5a3ec313bbce3df002f",
+      "lines": 24
+    },
+    "dev-inputs.jsonl": {
+      "sha256": "c2dcd1f08378702bd414b932fe287a54737f958a47b3713875c9404d42db66ee",
+      "lines": 24
+    }
+  }
+}

@@ -12,5 +12,5 @@ fastapi
 uvicorn
 
 # 说明：
-# - 本仓库不包含 sqlite 数据库与 seed，仅保留 Agent 运行/评测骨架。
+# - 数据库不入库；scripts/r5_seed_synthetic_data.py 可生成独立的自建演示数据。
 # - 订单数据使用本地 SQLite；物流轨迹由版本化本地 Simulator 生成。

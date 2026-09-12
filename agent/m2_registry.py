@@ -8,6 +8,12 @@ from pydantic import BaseModel, ConfigDict, Field, field_validator
 from .m2_errors import ErrorCatalog
 
 
+# Trusted invocation context keys a candidate arg mapping may never carry.
+RESERVED_CONTEXT_KEYS = frozenset(
+    {"session_id", "user_id", "run_id", "task_id", "attempt_id", "auth_scope", "idempotency_key", "deadline", "cancellation", "confirm_token"}
+)
+
+
 class ToolSpec(BaseModel):
     model_config = ConfigDict(extra="forbid", frozen=True)
 
@@ -65,8 +71,7 @@ class ToolSpec(BaseModel):
     def validate_candidate_args(self, args: Mapping[str, Any]) -> None:
         if not isinstance(args, Mapping):
             raise ValueError("tool args must be an object")
-        reserved = {"session_id", "user_id", "run_id", "task_id", "attempt_id", "auth_scope", "idempotency_key", "deadline", "cancellation", "confirm_token"}
-        if reserved.intersection(args):
+        if RESERVED_CONTEXT_KEYS.intersection(args):
             raise ValueError("candidate args cannot override trusted invocation context")
         schema = self._SCHEMAS.get(self.args_schema)
         if schema is None:

@@ -1,0 +1,36 @@
+manifest_version: dev-order-live-v1
+dataset_version: r1.dev-order-live.v1
+split: dev
+heldout: false
+data_source:
+  kind: sqlite
+  path: ecommerce.db
+  required_for_success_cases: true
+  business_rows_embedded: false
+model_repetitions: 3
+fault_repetitions: 1
+cases:
+  - {case_id: order-valid-01, category: valid_order, input_ref: order_fixture:valid:01, expected_intent: ORDER_READ, expected_tool_path: [order/get_info@v1], expected_status: SUCCEEDED}
+  - {case_id: order-valid-02, category: valid_order, input_ref: order_fixture:valid:02, expected_intent: ORDER_READ, expected_tool_path: [order/get_info@v1], expected_status: SUCCEEDED}
+  - {case_id: order-valid-03, category: valid_order, input_ref: order_fixture:valid:03, expected_intent: ORDER_READ, expected_tool_path: [order/get_info@v1], expected_status: SUCCEEDED}
+  - {case_id: order-valid-04, category: valid_order, input_ref: order_fixture:valid:04, expected_intent: ORDER_READ, expected_tool_path: [order/get_info@v1], expected_status: SUCCEEDED}
+  - {case_id: order-valid-05, category: valid_order, input_ref: order_fixture:valid:05, expected_intent: ORDER_READ, expected_tool_path: [order/get_info@v1], expected_status: SUCCEEDED}
+  - {case_id: order-valid-06, category: valid_order, input_ref: order_fixture:valid:06, expected_intent: ORDER_READ, expected_tool_path: [order/get_info@v1], expected_status: SUCCEEDED}
+  - {case_id: order-valid-07, category: valid_order, input_ref: order_fixture:valid:07, expected_intent: ORDER_READ, expected_tool_path: [order/get_info@v1], expected_status: SUCCEEDED}
+  - {case_id: order-valid-08, category: valid_order, input_ref: order_fixture:valid:08, expected_intent: ORDER_READ, expected_tool_path: [order/get_info@v1], expected_status: SUCCEEDED}
+  - {case_id: order-clarify-01, category: missing_entity, input_ref: prompt:missing_order_id, expected_intent: ORDER_READ, expected_tool_path: [], expected_status: NEEDS_CLARIFICATION}
+  - {case_id: order-clarify-02, category: missing_entity, input_ref: prompt:missing_phone_last4, expected_intent: ORDER_READ, expected_tool_path: [], expected_status: NEEDS_CLARIFICATION}
+  - {case_id: order-clarify-03, category: missing_entity, input_ref: prompt:ambiguous_order, expected_intent: ORDER_READ, expected_tool_path: [], expected_status: NEEDS_CLARIFICATION}
+  - {case_id: order-clarify-04, category: missing_entity, input_ref: prompt:followup_required, expected_intent: ORDER_READ, expected_tool_path: [], expected_status: NEEDS_CLARIFICATION}
+  - {case_id: order-missing-01, category: nonexistent_order, input_ref: order_fixture:missing:01, expected_intent: ORDER_READ, expected_tool_path: [order/get_info@v1], expected_code: ORDER_NOT_FOUND, expected_status: FAILED}
+  - {case_id: order-missing-02, category: nonexistent_order, input_ref: order_fixture:missing:02, expected_intent: ORDER_READ, expected_tool_path: [order/get_info@v1], expected_code: ORDER_NOT_FOUND, expected_status: FAILED}
+  - {case_id: order-missing-03, category: nonexistent_order, input_ref: order_fixture:missing:03, expected_intent: ORDER_READ, expected_tool_path: [order/get_info@v1], expected_code: ORDER_NOT_FOUND, expected_status: FAILED}
+  - {case_id: order-missing-04, category: nonexistent_order, input_ref: order_fixture:missing:04, expected_intent: ORDER_READ, expected_tool_path: [order/get_info@v1], expected_code: ORDER_NOT_FOUND, expected_status: FAILED}
+  - {case_id: order-unauthorized-01, category: unauthorized_order, input_ref: order_fixture:wrong_owner:01, expected_intent: ORDER_READ, expected_tool_path: [order/get_info@v1], expected_code: AUTH_IDENTITY_MISMATCH, expected_status: FAILED}
+  - {case_id: order-unauthorized-02, category: unauthorized_order, input_ref: order_fixture:wrong_owner:02, expected_intent: ORDER_READ, expected_tool_path: [order/get_info@v1], expected_code: AUTH_IDENTITY_MISMATCH, expected_status: FAILED}
+  - {case_id: order-unauthorized-03, category: unauthorized_order, input_ref: order_fixture:wrong_owner:03, expected_intent: ORDER_READ, expected_tool_path: [order/get_info@v1], expected_code: AUTH_IDENTITY_MISMATCH, expected_status: FAILED}
+  - {case_id: order-unauthorized-04, category: unauthorized_order, input_ref: order_fixture:wrong_owner:04, expected_intent: ORDER_READ, expected_tool_path: [order/get_info@v1], expected_code: AUTH_IDENTITY_MISMATCH, expected_status: FAILED}
+  - {case_id: order-model-fault-01, category: model_fault, input_ref: failure_script:model_invalid_json, expected_intent: null, expected_tool_path: [], expected_code: MODEL_SCHEMA_INVALID, expected_status: FAILED}
+  - {case_id: order-model-fault-02, category: model_fault, input_ref: failure_script:model_timeout, expected_intent: null, expected_tool_path: [], expected_code: MODEL_TIMEOUT, expected_status: FAILED}
+  - {case_id: order-db-fault-01, category: database_fault, input_ref: failure_script:db_unavailable, expected_intent: ORDER_READ, expected_tool_path: [order/get_info@v1], expected_code: CONFIG_MISSING, expected_status: FAILED}
+  - {case_id: order-db-fault-02, category: database_fault, input_ref: failure_script:db_query_error, expected_intent: ORDER_READ, expected_tool_path: [order/get_info@v1], expected_code: INFRA_UNAVAILABLE, expected_status: FAILED}
