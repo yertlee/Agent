@@ -3,13 +3,10 @@ langchain-core
 langchain-openai
 langsmith
 pydantic
-streamlit
 numpy
 faiss-cpu
 sentence-transformers
 typing-extensions
-fastapi
-uvicorn
 
 # 说明：
 # - 数据库不入库；scripts/r5_seed_synthetic_data.py 可生成独立的自建演示数据。

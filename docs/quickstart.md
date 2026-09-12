@@ -6,7 +6,7 @@
 pip install -r requirements-dev.txt
 ```
 
-## 2. 无 Key 的确定性路径（推荐先跑这个）
+## 2. 无 Key 的确定性检查
 
 不加载 `.env`、不联网、不调用模型：
 
@@ -19,7 +19,7 @@ python -m eval.r5_router_planner_eval --split dev --candidate keyword_router --d
 python -m eval.r5_router_planner_eval --split dev --candidate oracle        --data-dir .tmp/r5-synthetic
 
 # 测试
-python -m pytest -q
+python -m pytest -q tests/r5
 ```
 
 ## 3. 真实模型运行（需要 API Key）
@@ -44,6 +44,7 @@ python -m eval.r5_router_planner_eval --split dev --candidate real --data-dir .t
 
 - 推理型模型建议输出预算 ≥ 8000 token，否则会在结构化输出前耗尽预算。
 - 数据库（`*.db`）不入库，用上面的 seed 脚本生成；或在 `.env` 中用 `ECOMMERCE_DB_PATH` 指向本地库。
+- README 中的冻结结果来自仓库演示数据。上述合成夹具命令用于验证评测链能运行，不承诺复现冻结表格中的相同分数。
 
 ## 4. 常用命令
 
@@ -54,11 +55,14 @@ python -m eval.r5_router_planner_eval --split dev --candidate real --data-dir .t
 | 关键词基线 | `python -m eval.r5_router_planner_eval --split dev --candidate keyword_router` |
 | oracle 上界 | `python -m eval.r5_router_planner_eval --split dev --candidate oracle` |
 | 真实模型 | `python -m eval.r5_router_planner_eval --split dev --candidate real` |
-| 全量测试 | `python -m pytest -q` |
+| 当前系统测试 | `python -m pytest -q tests/r5` |
 | 敏感扫描 | `python scripts/r5_secret_scan.py` |
 
 ## 5. 结果与文档
 
 - 结果与限制：[`results.md`](results.md)
 - 架构说明：[`architecture.md`](architecture.md)
+- A2A 协议：[`a2a-protocol.md`](a2a-protocol.md)
+- 安全写：[`safe-write.md`](safe-write.md)
+- 评测设计：[`evaluation.md`](evaluation.md)
 - 冻结证据：[`evidence/`](evidence/)

@@ -1,15 +1,12 @@
-"""Build a deterministic, self-contained R5 synthetic fixture.
+"""Build a deterministic, self-contained synthetic fixture.
 
-The repository's historical ``r5_seed_demo_data.py`` derives its demo
-databases from a local ``ecommerce.db``.  This script is the no-key path for a
-fresh clone: every row below is authored synthetic data and no source
-database, environment file, network service, or model provider is consulted.
+Every row below is authored synthetic data. No source database, environment
+file, network service, or model provider is consulted.
 
 The command requires an explicit output directory and refuses to overwrite
 any generated target already present there.  It creates these files:
 
-* ``ecommerce.db`` - the read-only order projection used by the R4/R5 order
-  route;
+* ``ecommerce.db`` - the read-only order projection used by the order route;
 * ``r5_demo_v1.db`` - the product catalog and order-to-SKU links;
 * ``r5_aftersales_demo_v1.db`` - orders, case history, and policy rows;
 * ``r5_logistics_demo_v1.db`` - versioned logistics snapshots; and
@@ -21,7 +18,7 @@ Run from the project root, for example::
     python scripts/r5_seed_synthetic_data.py --output-dir .tmp/r5-synthetic
 
 The output directory may be removed after a run; it is deliberately separate
-from the repository's original ``ecommerce.db`` and ``data`` directory.
+from the repository's local data directory.
 """
 
 from __future__ import annotations

@@ -24,8 +24,6 @@ dist/
 .pytest_cache/
 .mypy_cache/
 
-.streamlit/secrets.toml
-
 # Local credentials, generated runs, and personal document artifacts.
 .env.*
 !.env.example

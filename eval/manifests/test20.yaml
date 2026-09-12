@@ -1,9 +1,0 @@
-manifest_version: m4.dataset-manifest.v1
-dataset_version: m5.test20.sealed.v1
-wave: test
-seed: 5020
-frozen_at: '2026-09-02T00:00:00Z'
-generated_cases: 20
-runnable: false
-sealed: true
-blind: true

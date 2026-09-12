@@ -1,8 +1,8 @@
-"""R5 secret scan: report only counts and file locations, never matched values.
+"""Scan publishable repository files for credential shapes.
 
-Scans project source/docs/artifacts for common credential shapes, excluding
-the local ``.env`` (which is never read) and binary files.  Any hit is a
-release blocker for the R5 evidence freeze.
+The scanner reports only counts and file locations, never matched values. It
+uses Git's tracked/untracked inventory with standard ignores, so local ``.env``
+and generated artifacts are never read.
 
 Run:  python scripts/r5_secret_scan.py
 """
@@ -10,10 +10,10 @@ from __future__ import annotations
 
 import json
 import re
+import subprocess
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-SCAN_DIRS = ["agent", "app", "eval", "scripts", "tests", "docs", "artifacts"]
 SKIP_NAMES = {".env", "inventory.json"}
 SKIP_SUFFIXES = {".db", ".sqlite", ".sqlite3", ".pyc", ".png", ".jpg", ".docx", ".pdf"}
 MAX_BYTES = 2_000_000
@@ -31,25 +31,30 @@ PATTERNS = {
 def main() -> None:
     hits: dict[str, list[str]] = {name: [] for name in PATTERNS}
     scanned = 0
-    for directory in SCAN_DIRS:
-        base = PROJECT_ROOT / directory
-        if not base.exists():
+    inventory = subprocess.run(
+        ["git", "ls-files", "--cached", "--others", "--exclude-standard"],
+        cwd=PROJECT_ROOT,
+        check=True,
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+    ).stdout.splitlines()
+    for relative in inventory:
+        path = PROJECT_ROOT / relative
+        if not path.is_file():
             continue
-        for path in base.rglob("*"):
-            if not path.is_file():
+        if path.name in SKIP_NAMES or path.suffix.lower() in SKIP_SUFFIXES:
+            continue
+        try:
+            if path.stat().st_size > MAX_BYTES:
                 continue
-            if path.name in SKIP_NAMES or path.suffix.lower() in SKIP_SUFFIXES:
-                continue
-            try:
-                if path.stat().st_size > MAX_BYTES:
-                    continue
-                text = path.read_text(encoding="utf-8", errors="ignore")
-            except OSError:
-                continue
-            scanned += 1
-            for name, pattern in PATTERNS.items():
-                if pattern.search(text):
-                    hits[name].append(str(path.relative_to(PROJECT_ROOT)).replace("\\", "/"))
+            text = path.read_text(encoding="utf-8", errors="ignore")
+        except OSError:
+            continue
+        scanned += 1
+        for name, pattern in PATTERNS.items():
+            if pattern.search(text):
+                hits[name].append(str(path.relative_to(PROJECT_ROOT)).replace("\\", "/"))
 
     result = {
         "scanned_files": scanned,

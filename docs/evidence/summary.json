@@ -1,114 +1,34 @@
 {
   "artifacts": {
-    "router_planner_dev_keyword_router.json": "08a1cbdc37b609422ee050b28a57a34653e025945990a214f465a2257653aa82",
-    "router_planner_dev_oracle.json": "8504fd1352e02b0a5c7ed1c5c1ae9a0179a8246e0b96831c5cb5186937fe7365",
+    "dataset-manifest.json": "1317312e2dd82a2f1d52f7b1fa53ebc201a51e9f183d3d78a8bef788a34420a5",
+    "router_planner_dev_keyword_router.json": "809ebf064067509c635dab8eb4c5278cbafd6693fdff034c37db7d66ee9c2dd5",
+    "router_planner_dev_oracle.json": "b165c53f5cd3a96c2b93fd4d5375076fc512e7f851a7658225f56fc27ba5c9df",
     "router_planner_dev_real_full.json": "ffe90743bdc54806c83ba87562193b3fd40d214240b64925378bd70fa280dbfe",
-    "secret_scan.json": "6f16d36defe272d05761c72de16461e47578aeb93328172557513235fb97110d"
+    "secret_scan.json": "1b693ac1542843c1647aa0c339d639df8243146821c1d76af1534e8671c665d5"
   },
   "dataset": {
     "cross_split_overlap": 0,
     "dev_unique_cases": 123,
-    "manifest_sha256": "1317312e2dd82a2f1d52f7b1fa53ebc201a51e9f183d3d78a8bef788a34420a5",
     "validation_unique_cases": 123,
     "version": "r5.router_planner.v1"
   },
   "keyword_baseline": {
-    "entity_micro_f1": 0.6559485530546625,
-    "exact_handoff": 0.4715447154471545,
-    "intent_core_label_set": [
-      "AFTERSALES_CANCEL",
-      "AFTERSALES_CREATE",
-      "AFTERSALES_MODIFY",
-      "AFTERSALES_STATUS",
-      "CHITCHAT",
-      "COMPLAINT",
-      "LOGISTICS_QUERY",
-      "ORDER_QUERY",
-      "POLICY_QA",
-      "PRODUCT_QUERY",
-      "UNKNOWN"
-    ],
+    "exact_handoff": 0.34959349593495936,
     "intent_core_macro_f1": 0.4632946651033922,
-    "intent_label_set": [
-      "AFTERSALES_CANCEL",
-      "AFTERSALES_CREATE",
-      "AFTERSALES_MODIFY",
-      "AFTERSALES_STATUS",
-      "CHITCHAT",
-      "COMPLAINT",
-      "LOGISTICS_QUERY",
-      "MULTI_INTENT",
-      "ORDER_QUERY",
-      "POLICY_QA",
-      "PRODUCT_QUERY",
-      "UNKNOWN"
-    ],
-    "intent_macro_f1": 0.42468677634477614,
-    "latency_ms_p50": 0.24750000739004463,
-    "necessary_clarification_recall": 0.6111111111111112,
-    "plan_conformance_rate": 0.43089430894308944,
-    "plan_required_goal_coverage_rate": 0.5528455284552846,
-    "required_reads_denominator": 94,
-    "required_reads_success_rate": 0.6170212765957447,
-    "task_completion_all_N": 123,
-    "task_completion_rate": 0.5384615384615384,
-    "task_completion_rate_all_N": 0.5121951219512195,
-    "task_completion_supported_N": 117,
-    "unnecessary_clarification_denominator": 105,
-    "unnecessary_clarification_rate": 0.19047619047619047
+    "plan_conformance_rate": 0.3089430894308943,
+    "plan_required_goal_coverage_rate": 0.4796747967479675,
+    "required_reads_success_rate": 0.44554455445544555,
+    "task_completion_rate": 0.47863247863247865,
+    "unnecessary_clarification_rate": 0.3904761904761905
   },
-  "metric_notes": {
-    "intent_core_macro_f1": "11-class semantic macro over the fixed core labels.",
-    "intent_macro_f1_compatibility": "12-class compatibility value includes MULTI_INTENT; frozen dev gold support is 0 because multi-intent is represented as a label set. Do not compare this value with the 11-class primary metric.",
-    "primary_intent_metric": "intent_core_macro_f1",
-    "exact_handoff": "Exact handoff requires predicted capability set == gold required caps. The oracle report contains a 0.7560975609756098 observation because its legal plan may include optional caps; this observation is not an upper bound and is omitted from README/results tables.",
-    "required_reads": "73/94 real; 58/94 keyword baseline; 91/94 oracle.",
-    "task_completion": "90/117 supported cases; 90/123 when the six unimplemented ASK_USER terminals are counted as non-success.",
-    "unnecessary_clarification": "6/105 real; 20/105 keyword baseline; 0/105 oracle."
+  "metric_definition": {
+    "intent_compatibility": "The real run also reports 0.782 on the 12-label compatibility definition. MULTI_INTENT has zero gold support and is excluded from the primary metric.",
+    "intent_primary": "Core Macro-F1 over 11 semantic intent labels.",
+    "task_completion": "Expected terminal and required business results after executing the generated plan; final answer wording and confirmed write submission are outside this metric."
   },
-  "oracle_upper_bound": {
-    "entity_micro_f1": 0.8509090909090908,
-    "exact_handoff": 0.7560975609756098,
-    "intent_core_label_set": [
-      "AFTERSALES_CANCEL",
-      "AFTERSALES_CREATE",
-      "AFTERSALES_MODIFY",
-      "AFTERSALES_STATUS",
-      "CHITCHAT",
-      "COMPLAINT",
-      "LOGISTICS_QUERY",
-      "ORDER_QUERY",
-      "POLICY_QA",
-      "PRODUCT_QUERY",
-      "UNKNOWN"
-    ],
+  "oracle": {
     "intent_core_macro_f1": 1.0,
-    "intent_label_set": [
-      "AFTERSALES_CANCEL",
-      "AFTERSALES_CREATE",
-      "AFTERSALES_MODIFY",
-      "AFTERSALES_STATUS",
-      "CHITCHAT",
-      "COMPLAINT",
-      "LOGISTICS_QUERY",
-      "MULTI_INTENT",
-      "ORDER_QUERY",
-      "POLICY_QA",
-      "PRODUCT_QUERY",
-      "UNKNOWN"
-    ],
-    "intent_macro_f1": 0.9166666666666666,
-    "latency_ms_p50": 0.24819999816827476,
-    "necessary_clarification_recall": 1.0,
-    "plan_conformance_rate": 1.0,
-    "plan_required_goal_coverage_rate": 1.0,
-    "required_reads_denominator": 94,
-    "required_reads_success_rate": 0.9680851063829787,
-    "task_completion_all_N": 123,
     "task_completion_rate": 1.0,
-    "task_completion_rate_all_N": 0.9512195121951219,
-    "task_completion_supported_N": 117,
-    "unnecessary_clarification_denominator": 105,
     "unnecessary_clarification_rate": 0.0
   },
   "provider_usage": {
@@ -122,48 +42,15 @@
     "total_tokens": 369010
   },
   "real": {
-    "entity_micro_f1": 0.5730027548209367,
     "exact_handoff": 0.7642276422764228,
-    "intent_core_label_set": [
-      "AFTERSALES_CANCEL",
-      "AFTERSALES_CREATE",
-      "AFTERSALES_MODIFY",
-      "AFTERSALES_STATUS",
-      "CHITCHAT",
-      "COMPLAINT",
-      "LOGISTICS_QUERY",
-      "ORDER_QUERY",
-      "POLICY_QA",
-      "PRODUCT_QUERY",
-      "UNKNOWN"
-    ],
     "intent_core_macro_f1": 0.853133866110234,
-    "intent_label_set": [
-      "AFTERSALES_CANCEL",
-      "AFTERSALES_CREATE",
-      "AFTERSALES_MODIFY",
-      "AFTERSALES_STATUS",
-      "CHITCHAT",
-      "COMPLAINT",
-      "LOGISTICS_QUERY",
-      "MULTI_INTENT",
-      "ORDER_QUERY",
-      "POLICY_QA",
-      "PRODUCT_QUERY",
-      "UNKNOWN"
-    ],
     "intent_macro_f1": 0.7820393772677146,
     "latency_ms_p50": 4224.160099998699,
-    "necessary_clarification_recall": 0.7222222222222222,
     "plan_conformance_rate": 0.7723577235772358,
     "plan_required_goal_coverage_rate": 0.7804878048780488,
-    "required_reads_denominator": 94,
     "required_reads_success_rate": 0.776595744680851,
-    "task_completion_all_N": 123,
     "task_completion_rate": 0.7692307692307693,
     "task_completion_rate_all_N": 0.7317073170731707,
-    "task_completion_supported_N": 117,
-    "unnecessary_clarification_denominator": 105,
     "unnecessary_clarification_rate": 0.05714285714285714
   },
   "run_context": {
@@ -192,6 +79,5 @@
     "output_budget_tokens": 8000,
     "prompt_kind": "r5.router_planner.prompt.v2",
     "provider_host": "api.deepseek.com"
-  },
-  "scope_note": "Execution reaches the registered expected terminal and validates required reads; it does not inspect final answer text or claim write submission."
+  }
 }
